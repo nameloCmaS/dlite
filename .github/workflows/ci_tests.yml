@@ -15,7 +15,7 @@ name: CI tests
 # Please remember to update respective plugin docstring if this list changes.
 #
 
-on: [push]
+on: [push, workflow_dispatch]
 
 jobs:
   build:
