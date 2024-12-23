@@ -46,6 +46,7 @@ jobs:
           if [[ ${{ matrix.os }} == windows* ]] ;
           then
             echo "CONDA_ENV_FILE=ci/requirements/environment-windows.yml" >> $GITHUB_ENV
+            
           elif [[ ${{ matrix.os }} == ubuntu* ]] ;
           then
             APT_INSTALL=(
@@ -60,8 +61,8 @@ jobs:
               python3-numpy
               python3-yaml
             )
-            echo "INSTALL_COMMAND=\"sudo apt-get update --fix-missing &&" \
-                 "sudo apt-get install ${APT_INSTALL[@]}\"" >> $GITHUB_ENV
+            echo "INSTALL_COMMAND=\"sudo apt-get update --fix-missing && \
+                  sudo apt-get install ${APT_INSTALL[@]}\"" >> $GITHUB_ENV
                 
           elif [[ ${{ matrix.os }} == macos* ]] ;
           then
