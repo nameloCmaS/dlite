@@ -48,35 +48,29 @@ jobs:
             echo "CONDA_ENV_FILE=ci/requirements/environment-windows.yml" >> $GITHUB_ENV
           elif [[ ${{ matrix.os }} == ubuntu* ]] ;
           then
-            {
-              echo 'INSTALL_COMMAND<<EOF'
-              sudo apt-get update --fix-missing && \
-              sudo apt-get install \
-                  libxml2-dev \
-                  libxslt-dev \
-                  libhdf5-dev \
-                  doxygen \
-                  graphviz \
-                  python3 \
-                  python3-pip \
-                  python3-dev \
-                  python3-numpy \
-                  python3-yaml
-              EOF
-            } >> "$GITHUB_ENV"
+              echo "INSTALL_COMMAND=\""\
+"sudo apt-get update --fix-missing && \
+sudo apt-get install \
+libxml2-dev \
+libxslt-dev \
+libhdf5-dev \
+doxygen \
+graphviz \
+python3 \
+python3-pip \
+python3-dev \
+python3-numpy \
+python3-yaml\"" >> $GITHUB_ENV
                 
           elif [[ ${{ matrix.os }} == macos* ]] ;
           then
-            {
-              echo 'INSTALL_COMMAND<<EOF'
-              brew install \
-                  libxml2 \
-                  libxslt \
-                  hdf5 \
-                  doxygen \
-                  graphviz
-              EOF
-            } >> "$GITHUB_ENV"
+              echo "INSTALL_COMMAND=\""\
+"brew install \
+libxml2 \
+libxslt \
+hdf5 \
+doxygen \
+graphviz\"" >> $GITHUB_ENV
 
           else
             echo "Unknown os `${{ matrix.os }}`. Should not reach here!"
