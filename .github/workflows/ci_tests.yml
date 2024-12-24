@@ -114,6 +114,7 @@ jobs:
           if [[ ${{ matrix.os }} == macos* ]] ;
           then
             MACOS_GFORTRAN="$(brew --prefix gfortran)"
+          fi
 
           CFLAGS='-Wno-missing-field-initializers' \
           cmake -B build . \
