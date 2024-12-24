@@ -79,6 +79,7 @@ jobs:
               hdf5
               doxygen
               graphviz
+              gfortran
             )
             brew install ${BREW_INSTALL[@]}
 
