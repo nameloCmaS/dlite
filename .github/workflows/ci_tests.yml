@@ -61,8 +61,8 @@ jobs:
               python3-numpy
               python3-yaml
             )
-            echo -e "INSTALL_COMMAND=\"sudo apt-get update --fix-missing && \\ \n" \
-                 "sudo apt-get install ${APT_INSTALL[@]}\"" >> $GITHUB_ENV
+            echo -e "INSTALL_COMMAND=\"sudo apt-get update --fix-missing && \\" \
+                 "\nsudo apt-get install ${APT_INSTALL[@]}\"" >> $GITHUB_ENV
                 
           elif [[ ${{ matrix.os }} == macos* ]] ;
           then
