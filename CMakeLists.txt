@@ -890,9 +890,6 @@ add_custom_target(show ${cmd})
 # Subdirectories
 add_subdirectory(src)
 
-# Tools - may depend on storage plugins
-add_subdirectory(tools)
-
 # Storage plugins
 add_subdirectory(storages/json)
 if(WITH_HDF5)
