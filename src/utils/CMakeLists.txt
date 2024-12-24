@@ -1,4 +1,10 @@
 # -*- Mode: cmake -*-
+if(APPLE)
+  # TODO: Check if Debug and build just arm64 (for Github worker), or
+  # otherwise just the native architecture
+  set(CMAKE_OSX_ARCHITECTURES arm64 x86_64 CACHE STRING "MacOS Architecture")
+endif()
+
 project(dlite-src-utils C)
 
 #-----------------------------------------------------
