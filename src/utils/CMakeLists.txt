@@ -196,9 +196,6 @@ int main(void) { const char *f = __FUNCTION__; (void)(f); return 0; }
 #  set(DSL_EXT "_d.dll")
 #endif()
 
-# .. generate config.h
-configure_file(config.h.in config.h)
-
 
 # Generate byteorder.h
 # --------------------
@@ -449,3 +446,6 @@ install(
 
 # Tests
 add_subdirectory(tests)
+
+# .. generate config.h
+configure_file(config.h.in config.h)
