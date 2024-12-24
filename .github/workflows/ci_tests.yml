@@ -81,7 +81,7 @@ jobs:
               graphviz
               # gfortran
             )
-            brew install ${BREW_INSTALL[@]}
+            brew install --formula ${BREW_INSTALL[@]}
 
           else
             echo "Unknown os `${{ matrix.os }}`. Should not reach here!"
@@ -113,7 +113,12 @@ jobs:
         run: |
           if [[ ${{ matrix.os }} == macos* ]] ;
           then
-            MACOS_GFORTRAN="-DCMAKE_Fortran_COMPILER=$(brew --prefix gfortran)"
+            # TODO: The below can be updated to use the action at
+            # https://github.com/fortran-lang/setup-fortran
+            # which can be used for the Windows install also
+            # This will avoid updating the version to suit the updated runners
+            # from time to time
+            MACOS_GFORTRAN="-DCMAKE_Fortran_COMPILER=$(brew --prefix gfortran)-13"
           fi
 
           CFLAGS='-Wno-missing-field-initializers' \
