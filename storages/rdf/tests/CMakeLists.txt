@@ -33,8 +33,9 @@ foreach(test ${tests})
     ENVIRONMENT "PATH=${dlite_PATH_NATIVE}")
   set_property(TEST ${test} APPEND PROPERTY
     ENVIRONMENT "PYTHONPATH=${dlite_PYTHONPATH_NATIVE}")
-  set_property(TEST ${test} APPEND PROPERTY
-    ENVIRONMENT "LD_LIBRARY_PATH=${dlite_LD_LIBRARY_PATH_NATIVE}")
+  if(UNIX AND NOT APPLE)
+    set_property(TEST ${test} APPEND PROPERTY
+  endif()
   set_property(TEST ${test} APPEND PROPERTY
     ENVIRONMENT "DLITE_USE_BUILD_ROOT=YES")
 
