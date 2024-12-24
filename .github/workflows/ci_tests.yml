@@ -43,6 +43,13 @@ jobs:
         run: |
           # echo "TODAY=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
+
+        # We do not install rdflib0-dev here, since we want to test
+        # DLite both with and without rdflib (Redland) support and the
+        # case with rdflib is already covered by the ci_build_wheel
+        # workflow for Linux systems.
+      - name: Install dependencies
+        run: |
           if [[ ${{ matrix.os }} == windows* ]] ;
           then
             echo "CONDA_ENV_FILE=ci/requirements/environment-windows.yml" >> $GITHUB_ENV
@@ -61,8 +68,8 @@ jobs:
               python3-numpy
               python3-yaml
             )
-            echo -e "INSTALL_COMMAND=\"sudo apt-get update --fix-missing && \\" \
-                 "\nsudo apt-get install ${APT_INSTALL[@]}\"" >> $GITHUB_ENV
+            sudo apt-get update --fix-missing && \
+            sudo apt-get install ${APT_INSTALL[@]}
                 
           elif [[ ${{ matrix.os }} == macos* ]] ;
           then
@@ -73,18 +80,11 @@ jobs:
               doxygen
               graphviz
             )
-            echo "INSTALL_COMMAND=\"brew install ${BREW_INSTALL[@]}\"" >> $GITHUB_ENV
+            brew install ${BREW_INSTALL[@]}
 
           else
             echo "Unknown os `${{ matrix.os }}`. Should not reach here!"
           fi
-
-        # We do not install rdflib0-dev here, since we want to test
-        # DLite both with and without rdflib (Redland) support and the
-        # case with rdflib is already covered by the ci_build_wheel
-        # workflow for Linux systems.
-      - name: Install dependencies
-        run: ${{ env.INSTALL_COMMAND }}
 
   
       - name: Install Python dependencies
