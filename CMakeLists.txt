@@ -2,6 +2,12 @@
 #
 cmake_minimum_required(VERSION 3.16)
 
+if(APPLE)
+  # set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE) 
+  # FIXME: Hack for now to allow testing of Github actions
+  set(CMAKE_OSX_ARCHITECTURES "arm64" CACHE STRING "" FORCE) 
+endif()
+
 project(dlite
   VERSION 0.5.27
   DESCRIPTION "Lightweight data-centric framework for semantic interoperability"
