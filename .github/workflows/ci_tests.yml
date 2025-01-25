@@ -74,8 +74,8 @@ jobs:
           elif [[ ${{ matrix.os }} == macos* ]] ;
           then
             BREW_INSTALL=(
-              libxml2
-              libxslt
+              # libxml2
+              # libxslt
               hdf5
               doxygen
               graphviz
