@@ -326,7 +326,9 @@ if(WITH_PYTHON)
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
   if(Python3_LDFLAGS)
-    list(APPEND extra_link_libraries ${Python3_LDFLAGS})
+    # Strip out -arch if present
+    string(REGEX REPLACE "(-arch[\s]+[\w]+ )?(.)" "\\2" Python3_LDFLAGS_NoArch Python3_LDFLAGS)¶
+    list(APPEND extra_link_libraries ${Python3_LDFLAGS_NoArch})
   endif()
 
   # Find python-config
