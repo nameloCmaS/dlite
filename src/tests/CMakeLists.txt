@@ -1,11 +1,4 @@
 # -*- Mode: cmake -*-
-
-if(APPLE)
-  # set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE) 
-  # FIXME: Hack for now to allow testing of Github actions
-  set(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "" FORCE) 
-endif()
-
 project(dlite-src-tests C)
 
 set(tests
