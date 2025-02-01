@@ -1,12 +1,15 @@
 # -*- Mode: cmake -*-
 #
 cmake_minimum_required(VERSION 3.14)
-
-find_package(dlite REQUIRED)
+if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.27")
+  cmake_policy(SET CMP0144 OLD)
+endif()
 
 project(dlite-example-4
   VERSION 0.1
   LANGUAGES Fortran C)
+
+find_package(dlite REQUIRED)
 
 add_compile_options("-DDLITE_ROOT=${DLITE_ROOT}")
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
