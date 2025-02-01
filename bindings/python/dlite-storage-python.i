@@ -55,7 +55,7 @@
 
       @classmethod
       def plugin_help(cls, name):
-          """Return documentation of storage plogin with this name."""
+          """Return documentation of storage plugin with this name."""
           return _dlite._storage_plugin_help(name)
 
       def instances(self, pattern=None):
