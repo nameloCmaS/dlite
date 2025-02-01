@@ -36,6 +36,21 @@ target_include_directories(dlite-codegen PRIVATE
   ${dlite_BINARY_DIR}/src
 )
 
+# executable is in ./bin, find
+# libdlite.so, libdlite-utils.so (or lib*.dylib on macOS)
+# in ./lib
+if(APPLE)
+  set_target_properties(dlite-codegen PROPERTIES
+    BUILD_RPATH "@loader_path/../lib/"
+    INSTALL_RPATH "@loader_path/../lib/"
+  )
+else()
+  set_target_properties(dlite-codegen PROPERTIES
+    BUILD_RPATH "$ORIGIN/../lib/"
+    INSTALL_RPATH "$ORIGIN/../lib/"
+    )
+endif()
+
 
 # dlite-env
 add_executable(dlite-env dlite-env.c)
@@ -48,6 +63,22 @@ target_include_directories(dlite-env PRIVATE
   ${dlite_SOURCE_DIR}/src
   ${dlite_BINARY_DIR}/src
 )
+
+# executable is in ./bin, find
+# libdlite.so, libdlite-utils.so (or lib*.dylib on macOS)
+# in ./lib
+if(APPLE)
+  set_target_properties(dlite-env PROPERTIES
+    BUILD_RPATH "@loader_path/../lib/"
+    INSTALL_RPATH "@loader_path/../lib/"
+  )
+else()
+  set_target_properties(dlite-env PROPERTIES
+    BUILD_RPATH "$ORIGIN/../lib/"
+    INSTALL_RPATH "$ORIGIN/../lib/"
+    )
+endif()
+
 
 # Subdirectories
 add_subdirectory(tests)

@@ -16,11 +16,22 @@ target_include_directories(dlite-plugins-json PUBLIC
   ${dlite-src_SOURCE_DIR}
   ${dlite-src_BINARY_DIR}
   )
-set_target_properties(dlite-plugins-json PROPERTIES
-  WINDOWS_EXPORT_ALL_SYMBOLS ON
-  BUILD_RPATH "$ORIGIN/../../../"       # library is in ./dlite/share/dlite/storage-plugins, find libdlite-pyembed.so, libdlite.so, libdlite-utils.so in ./dlite
-  INSTALL_RPATH "$ORIGIN/../../../"
-  )
+
+# library is in ./dlite/share/dlite/storage-plugins, find
+# _dlite.so, libdlite.so, libdlite-utils.so (or lib*.dylib on macOS)
+# in ./dlite
+if(APPLE)
+  set_target_properties(dlite-plugins-json PROPERTIES
+    BUILD_RPATH "@loader_path/../../../"
+    INSTALL_RPATH "@loader_path/../../../"
+    )
+else()
+  set_target_properties(dlite-plugins-json PROPERTIES
+    WINDOWS_EXPORT_ALL_SYMBOLS ON
+    BUILD_RPATH "$ORIGIN/../../../"
+    INSTALL_RPATH "$ORIGIN/../../../"
+    )
+endif()
 
 # Simplify plugin search path for testing in build tree, copy target
 # to ${dlite_BINARY_DIR}/plugins

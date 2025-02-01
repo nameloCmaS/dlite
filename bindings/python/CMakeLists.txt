@@ -76,11 +76,19 @@ swig_add_library(dlitepy
 
 
 # Convince _dlite.so that it may search for whatever libraries it depends on in its own directory
-set_target_properties(dlitepy PROPERTIES
-  BUILD_RPATH "$ORIGIN/"
-  INSTALL_RPATH "$ORIGIN/"
-  OUTPUT_NAME "dlite"
-  )
+if(APPLE)
+  set_target_properties(dlitepy PROPERTIES
+    BUILD_RPATH "@loader_path/"
+    INSTALL_RPATH "@loader_path/"
+    OUTPUT_NAME "dlite"
+    )
+else()
+  set_target_properties(dlitepy PROPERTIES
+    BUILD_RPATH "$ORIGIN/"
+    INSTALL_RPATH "$ORIGIN/"
+    OUTPUT_NAME "dlite"
+    )
+endif()
 
 
 # Python only looks for .so for compiled extension modules on all Unix platforms including MacOS 

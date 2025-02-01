@@ -18,12 +18,22 @@ target_include_directories(dlite-plugins-python PUBLIC
   ${dlite-src_BINARY_DIR}
   ${Python3_INCLUDE_DIRS}
   )
-set_target_properties(dlite-plugins-python PROPERTIES
-  WINDOWS_EXPORT_ALL_SYMBOLS ON
-  BUILD_RPATH "$ORIGIN/../../../"       # library is in ./dlite/share/dlite/storage-plugins, find libdlite-pyembed.so, libdlite.so, libdlite-utils.so in ./dlite
-  INSTALL_RPATH "$ORIGIN/../../../"
-  )
 
+# library is in ./dlite/share/dlite/storage-plugins, find
+# _dlite.so, libdlite.so, libdlite-utils.so (or lib*.dylib on macOS)
+# in ./dlite
+if(APPLE)
+  set_target_properties(dlite-plugins-python PROPERTIES
+    BUILD_RPATH "@loader_path/../../../"
+    INSTALL_RPATH "@loader_path/../../../"
+    )
+else()
+  set_target_properties(dlite-plugins-python PROPERTIES
+    WINDOWS_EXPORT_ALL_SYMBOLS ON
+    BUILD_RPATH "$ORIGIN/../../../"
+    INSTALL_RPATH "$ORIGIN/../../../"
+    )
+endif()
 
 install(
   TARGETS dlite-plugins-python
