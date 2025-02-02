@@ -165,6 +165,7 @@ jobs:
           echo $PWD
           if [[ ${{ matrix.os }} == ubuntu* ]] ;
           then
+              sudo apt-get install binutils
               objdump -x ./ex1/dlite-example-1 | grep RPATH
               objdump -x ./ex2/dlite-example-2 | grep RPATH
               objdump -x ./ex3/dlite-example-3 | grep RPATH
