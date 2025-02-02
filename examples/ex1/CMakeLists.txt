@@ -27,11 +27,7 @@ dlite_codegen(
 link_directories(${DLITE_LIBRARY_DIR})
 
 add_executable(dlite-example-1 main.c chemistry.h)
-target_link_libraries(dlite-example-1
-  dlite
-  dlite-utils
-  ${extra_link_libraries}
-  )
+target_link_libraries(dlite-example-1 ${DLITE_LIBRARIES})
 target_include_directories(dlite-example-1 PUBLIC
   ${DLITE_INCLUDE_DIRS}
   ${CMAKE_CURRENT_BINARY_DIR}

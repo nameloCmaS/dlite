@@ -30,11 +30,7 @@ dlite_codegen(
 link_directories(${DLITE_LIBRARY_DIR})
 
 add_executable(dlite-example-3 main.c philibtable.h)
-target_link_libraries(dlite-example-3
-  dlite
-  dlite-utils
-  ${extra_link_libraries}
-  )
+target_link_libraries(dlite-example-3 ${DLITE_LIBRARIES})
 target_include_directories(dlite-example-3 PUBLIC
   ${DLITE_INCLUDE_DIRS}
   ${CMAKE_CURRENT_BINARY_DIR}
