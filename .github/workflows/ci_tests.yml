@@ -130,7 +130,10 @@ jobs:
             ${MACOS_GFORTRAN}
 
       - name: Build
-        run: echo $PWD; cmake --build .
+        run: |
+          echo Current dir:
+          echo $PWD
+          cmake --build .
         working-directory: ./build
 
       - name: Install
@@ -152,6 +155,8 @@ jobs:
       - name: Check RPATHS on Linux for examples
         working-directory: ../../../.local/share/dlite/examples
         run: |
+          echo Current dir:
+          echo $PWD
           if [[ ${{ matrix.os }} == ubuntu* ]] ;
           then
               objdump -x ./ex1/dlite-example-1 | grep RPATH
