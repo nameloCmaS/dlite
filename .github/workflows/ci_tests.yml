@@ -140,6 +140,12 @@ jobs:
         run: cmake --install .
         working-directory: ./build
 
+      - name: Test
+        env:
+          DLITE_PYDEBUG: ""
+        run: ctest || ctest --rerun-failed --output-on-failure -V
+        working-directory: ./build
+  
       # TODO: Temp only debug output...
       # On Linux the default path is:
       #   /home/runner/work/<repo>/<repo>
@@ -153,7 +159,7 @@ jobs:
       #   /home/runner/.local
       # 
       - name: Check RPATHS on Linux for examples
-        working-directory: ../../../.local/share/dlite/examples
+        working-directory: ./build/examples
         run: |
           echo Current dir:
           echo $PWD
@@ -171,12 +177,6 @@ jobs:
               otool -l ./ex4/dlite-example-4 | grep RPATH -A2
           fi
 
-      - name: Test
-        env:
-          DLITE_PYDEBUG: ""
-        run: ctest || ctest --rerun-failed --output-on-failure -V
-        working-directory: ./build
-  
       - name: Test with all behavior changes disabled
         env:
           DLITE_BEHAVIOR: OFF
