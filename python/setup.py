@@ -26,7 +26,7 @@ SETUP_DIR = Path(__file__).resolve().parent
 SOURCE_DIR = SETUP_DIR.parent
 
 # Set platform-specific CMAKE_ARGS
-if platform.system() == "Linux":
+if platform.system() in ["Linux", "Darwin"]:
     dlite_compiled_ext = "_dlite.so"
     dlite_compiled_dll_suffix = "*.so"
     CMAKE_ARGS = [
