@@ -183,7 +183,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dlite-build-${{ matrix.os }}
-          path: ${GITHUB_WORKSPACE}/build
+          path: ${{ github.workspace }}/build
 
       - name: Test with all behavior changes disabled
         env:
