@@ -133,7 +133,19 @@ jobs:
       - name: Build
         run: cmake --build .
         working-directory: build
-  
+
+      # TODO: Temp only debug output...
+      - name: Check RPATHS on Linux for examples
+        working-directory: build
+        run: |
+          if [[ ${{ matrix.os }} == ubuntu* ]] ;
+          then
+              objdump -x ./examples/ex1/dlite-example-1 | grep RPATH 
+              objdump -x ./examples/ex2/dlite-example-2 | grep RPATH 
+              objdump -x ./examples/ex3/dlite-example-3 | grep RPATH 
+              objdump -x ./examples/ex4/dlite-example-4 | grep RPATH 
+          fi
+                      
       - name: Install
         run: cmake --install .
         working-directory: build
