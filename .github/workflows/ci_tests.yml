@@ -129,44 +129,49 @@ jobs:
             -DPython3_ROOT_DIR=$(python3 -c 'import sys; print(sys.exec_prefix)') \
             ${MACOS_GFORTRAN}
 
-  
+      - name: Install
+        run: cmake --install .
+        working-directory: ./build
+
       - name: Build
         run: cmake --build .
-        working-directory: build
+        working-directory: ./build
 
       # TODO: Temp only debug output...
       - name: Check RPATHS on Linux for examples
-        working-directory: build
+        working-directory: ./build
         run: |
           if [[ ${{ matrix.os }} == ubuntu* ]] ;
           then
-              objdump -x ./examples/ex1/dlite-example-1 | grep RPATH 
-              objdump -x ./examples/ex2/dlite-example-2 | grep RPATH 
-              objdump -x ./examples/ex3/dlite-example-3 | grep RPATH 
-              objdump -x ./examples/ex4/dlite-example-4 | grep RPATH 
+              objdump -x ./examples/ex1/dlite-example-1 | grep RPATH
+              objdump -x ./examples/ex2/dlite-example-2 | grep RPATH
+              objdump -x ./examples/ex3/dlite-example-3 | grep RPATH
+              objdump -x ./examples/ex4/dlite-example-4 | grep RPATH
+          elif [[ ${{ matrix.os }} == macos* ]] ;
+          then
+              otool -l ./examples/ex1/dlite-example-1 | grep RPATH -A2
+              otool -l ./examples/ex2/dlite-example-2 | grep RPATH -A2
+              otool -l ./examples/ex3/dlite-example-3 | grep RPATH -A2
+              otool -l ./examples/ex4/dlite-example-4 | grep RPATH -A2
           fi
-                      
-      - name: Install
-        run: cmake --install .
-        working-directory: build
-  
+
       - name: Test
         env:
           DLITE_PYDEBUG: ""
         run: ctest || ctest --rerun-failed --output-on-failure -V
-        working-directory: build
+        working-directory: ./build
   
       - name: Test with all behavior changes disabled
         env:
           DLITE_BEHAVIOR: OFF
         run: ctest || ctest --rerun-failed --output-on-failure -V
-        working-directory: build
+        working-directory: ./build
   
       - name: Test with all behavior changes enabled
         env:
           DLITE_BEHAVIOR: ON
         run: ctest || ctest --rerun-failed --output-on-failure -V
-        working-directory: build
+        working-directory: ./build
   
       - name: Build Linux wheel
         run: python3 -m pip wheel -w dist ./python
