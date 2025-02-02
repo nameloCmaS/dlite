@@ -138,21 +138,32 @@ jobs:
         working-directory: ./build
 
       # TODO: Temp only debug output...
+      # On Linux the default path is:
+      #   /home/runner/work/<repo>/<repo>
+      # accessible as $GITHUB_WORKSPACE
+      # In this repo's case it is:
+      #   /home/runner/work/dlite/dlite
+      # which unless the default is overridden,
+      # the working-directory nodes are relative to.
+      # 
+      # Install files for this repo are in in:
+      #   /home/runner/.local
+      # 
       - name: Check RPATHS on Linux for examples
-        working-directory: ./build
+        working-directory: ../../../.local/share/dlite/examples
         run: |
           if [[ ${{ matrix.os }} == ubuntu* ]] ;
           then
-              objdump -x ./examples/ex1/dlite-example-1 | grep RPATH
-              objdump -x ./examples/ex2/dlite-example-2 | grep RPATH
-              objdump -x ./examples/ex3/dlite-example-3 | grep RPATH
-              objdump -x ./examples/ex4/dlite-example-4 | grep RPATH
+              objdump -x ./ex1/dlite-example-1 | grep RPATH
+              objdump -x ./ex2/dlite-example-2 | grep RPATH
+              objdump -x ./ex3/dlite-example-3 | grep RPATH
+              objdump -x ./ex4/dlite-example-4 | grep RPATH
           elif [[ ${{ matrix.os }} == macos* ]] ;
           then
-              otool -l ./examples/ex1/dlite-example-1 | grep RPATH -A2
-              otool -l ./examples/ex2/dlite-example-2 | grep RPATH -A2
-              otool -l ./examples/ex3/dlite-example-3 | grep RPATH -A2
-              otool -l ./examples/ex4/dlite-example-4 | grep RPATH -A2
+              otool -l ./ex1/dlite-example-1 | grep RPATH -A2
+              otool -l ./ex2/dlite-example-2 | grep RPATH -A2
+              otool -l ./ex3/dlite-example-3 | grep RPATH -A2
+              otool -l ./ex4/dlite-example-4 | grep RPATH -A2
           fi
 
       - name: Test
