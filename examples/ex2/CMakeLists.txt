@@ -32,7 +32,11 @@ add_compile_options("-DDLITE_ROOT=${DLITE_ROOT}")
 link_directories(${DLITE_LIBRARY_DIR})
 
 add_executable(dlite-example-2 main.c chemistry.h)
-target_link_libraries(dlite-example-2 ${DLITE_LIBRARIES})
+target_link_libraries(dlite-example-2
+  dlite
+  dlite-utils
+  ${extra_link_libraries}
+  )
 target_include_directories(dlite-example-2 PUBLIC
   ${DLITE_INCLUDE_DIRS}
   ${CMAKE_CURRENT_BINARY_DIR}
