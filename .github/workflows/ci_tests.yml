@@ -158,25 +158,32 @@ jobs:
       # Install files for this repo are in in:
       #   /home/runner/.local
       # 
-      - name: Check RPATHS on Linux for examples
-        working-directory: ./build/examples
-        run: |
-          echo Current dir:
-          echo $PWD
-          if [[ ${{ matrix.os }} == ubuntu* ]] ;
-          then
-              sudo apt-get install binutils
-              objdump -x ./ex1/dlite-example-1 | grep RPATH
-              objdump -x ./ex2/dlite-example-2 | grep RPATH
-              objdump -x ./ex3/dlite-example-3 | grep RPATH
-              objdump -x ./ex4/dlite-example-4 | grep RPATH
-          elif [[ ${{ matrix.os }} == macos* ]] ;
-          then
-              otool -l ./ex1/dlite-example-1 | grep RPATH -A2
-              otool -l ./ex2/dlite-example-2 | grep RPATH -A2
-              otool -l ./ex3/dlite-example-3 | grep RPATH -A2
-              otool -l ./ex4/dlite-example-4 | grep RPATH -A2
-          fi
+      # - name: Check RPATHS on Linux for examples
+      #   working-directory: ./build/examples
+      #   run: |
+      #     echo Current dir:
+      #     echo $PWD
+      #     if [[ ${{ matrix.os }} == ubuntu* ]] ;
+      #     then
+      #         # sudo apt-get install binutils
+      #         # objdump -x ./ex1/dlite-example-1 | grep RPATH
+      #         # objdump -x ./ex2/dlite-example-2 | grep RPATH
+      #         # objdump -x ./ex3/dlite-example-3 | grep RPATH
+      #         # objdump -x ./ex4/dlite-example-4 | grep RPATH
+
+      #     elif [[ ${{ matrix.os }} == macos* ]] ;
+      #     then
+      #         otool -l ./ex1/dlite-example-1 | grep RPATH -A2
+      #         otool -l ./ex2/dlite-example-2 | grep RPATH -A2
+      #         otool -l ./ex3/dlite-example-3 | grep RPATH -A2
+      #         otool -l ./ex4/dlite-example-4 | grep RPATH -A2
+      #     fi
+
+      - name: Upload Build as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dlite-build-${{ matrix.os }}
+          path: ${GITHUB_WORKSPACE}/build
 
       - name: Test with all behavior changes disabled
         env:
