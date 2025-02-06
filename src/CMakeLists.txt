@@ -80,7 +80,13 @@ endif()
 if(WITH_PYTHON)
   list(APPEND include_directories_extra ${Python3_INCLUDE_DIRS})
   if(NOT WITH_STATIC_PYTHON)
-    list(APPEND link_libraries_extra ${Python3_LIBRARIES})
+    # Force Linux to use the full path to the Python library instead of the SONAME
+    add_library(python_lib SHARED IMPORTED)
+    set_target_properties(python_lib PROPERTIES
+      IMPORTED_LOCATION ${Python3_LIBRARIES}
+      IMPORTED_NO_SONAME TRUE
+      )
+    list(APPEND link_libraries_extra python_lib)
   endif()
   # Python requires the intl library
   find_library(INTL_LIBRARY intl)
@@ -129,9 +135,6 @@ endif()
 
 target_link_libraries(dlite ${link_args})
 target_link_libraries(dlite-static ${link_args})
-
-# Todo: Remove temp debug
-message(STATUS "link_args = ${link_args}")
 
 if(APPLE)
   set_target_properties(dlite PROPERTIES
