@@ -82,10 +82,10 @@ if(APPLE)
       INSTALL_RPATH "@executable_path/../lib;@executable_path/../../.."
   )
 else()
-  set_target_properties(dlite-env
+  set_target_properties(dlite-getuuid dlite-codegen dlite-env
     PROPERTIES
       BUILD_WITH_INSTALL_RPATH FALSE
-      INSTALL_RPATH '$ORIGIN/../lib;$ORIGIN/../../..'
+      INSTALL_RPATH "$ORIGIN/../lib;$ORIGIN/../../.."
   )
 endif()
 
