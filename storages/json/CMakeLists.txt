@@ -22,26 +22,26 @@ target_include_directories(dlite-plugins-json PUBLIC
 # in ./dlite
 if(APPLE)
   set_target_properties(dlite-plugins-json PROPERTIES
-    BUILD_RPATH "@loader_path/../../../"
-    INSTALL_RPATH "@loader_path/../../../"
+    BUILD_RPATH "@loader_path/../../.."
+    INSTALL_RPATH "@loader_path/../../.."
     )
 else()
   set_target_properties(dlite-plugins-json PROPERTIES
     WINDOWS_EXPORT_ALL_SYMBOLS ON
-    BUILD_RPATH "$ORIGIN/../../../"
-    INSTALL_RPATH "$ORIGIN/../../../"
+    BUILD_RPATH "$ORIGIN/../../.."
+    INSTALL_RPATH "$ORIGIN/../../.."
     )
 endif()
 
 # Simplify plugin search path for testing in build tree, copy target
 # to ${dlite_BINARY_DIR}/plugins
-add_custom_command(
-  TARGET dlite-plugins-json
-  POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    $<TARGET_FILE:dlite-plugins-json>
-    ${dlite_BINARY_DIR}/plugins
-  )
+# add_custom_command(
+#   TARGET dlite-plugins-json
+#   POST_BUILD
+#   COMMAND ${CMAKE_COMMAND} -E copy_if_different
+#     $<TARGET_FILE:dlite-plugins-json>
+#     ${dlite_BINARY_DIR}/plugins
+#   )
 
 
 install(

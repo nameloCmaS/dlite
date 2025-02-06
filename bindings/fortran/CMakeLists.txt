@@ -15,6 +15,18 @@ target_link_libraries(dlite-fortran
   dlite-utils
   )
 
+if(APPLE)
+  set_target_properties(dlite PROPERTIES
+    BUILD_RPATH "@loader_path/../lib"
+    INSTALL_RPATH "@loader_path/../lib"
+    )
+else()
+  set_target_properties(dlite PROPERTIES
+    # WINDOWS_EXPORT_ALL_SYMBOLS ON
+    BUILD_RPATH "$ORIGIN/../lib"
+    INSTALL_RPATH "$ORIGIN/../lib"
+    )
+endif()
 
 ## create list of modules to install from ${sources}
 set(modules "")

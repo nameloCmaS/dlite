@@ -75,19 +75,35 @@ swig_add_library(dlitepy
   )
 
 
-# Convince _dlite.so that it may search for whatever libraries it depends on in its own directory
+# LIBRARY RPATH/ RUNPATH: dlitepy
+# ===============================
+# 
+# This library will be run as a standalone Python extension from:
+#   ${CMAKE_INSTALL_PREFIX}/lib/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/site-packages/dlite
+#   OR USING DLITE DIR VARS:
+#   ${DLITE_PYTHONPATH}/dlite
+# 
+# The two linked libraries will be copied into the above noted folder.
+# 
+# Note: lib can be lib64 on some Linux platforms e.g. Fedora and SuSE:
+#   https://docs.python.org/3/using/configure.html#cmdoption-with-platlibdir
+
 if(APPLE)
-  set_target_properties(dlitepy PROPERTIES
-    BUILD_RPATH "@loader_path/"
-    INSTALL_RPATH "@loader_path/"
-    OUTPUT_NAME "dlite"
-    )
+# macOS needs full paths hence @loader_path
+  set_target_properties(dlitepy
+    PROPERTIES
+      BUILD_RPATH "@loader_path"
+      INSTALL_RPATH "@loader_path"
+      OUTPUT_NAME "dlite"
+  )
 else()
-  set_target_properties(dlitepy PROPERTIES
-    BUILD_RPATH "$ORIGIN/"
-    INSTALL_RPATH "$ORIGIN/"
-    OUTPUT_NAME "dlite"
-    )
+  # Linux uses DT_RUNPATH which can be overridden by the environment variable LD_LIBRARY_PATH
+  set_target_properties(dlitepy
+    PROPERTIES
+      BUILD_RPATH "$ORIGIN"
+      INSTALL_RPATH "$ORIGIN"
+      OUTPUT_NAME "dlite"
+  )
 endif()
 
 

@@ -30,6 +30,11 @@ foreach(test ${tests})
     ${dlite-src_SOURCE_DIR}/tests
   )
 
+  # TODO: Change to generators for dlite, dlite-utils etc as easier to maintain
+  set_property(TARGET ${test} PROPERTY
+    INSTALL_RPATH ${dlite_BINARY_DIR}/src;${dlite_BINARY_DIR}/src/utils
+    )
+
   add_test(
     NAME ${test}
     COMMAND ${RUNNER} ${test}

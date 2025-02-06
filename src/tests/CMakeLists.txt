@@ -58,6 +58,10 @@ foreach(test ${tests})
     ${dlite_BINARY_DIR}/src
     )
 
+  set_property(TARGET ${test} PROPERTY
+    INSTALL_RPATH ${dlite_BINARY_DIR}/src;${dlite_BINARY_DIR}/src/utils
+    )
+
   add_test(
     NAME ${test}
     COMMAND ${RUNNER} ${test}

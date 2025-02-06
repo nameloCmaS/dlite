@@ -24,14 +24,14 @@ target_include_directories(dlite-plugins-python PUBLIC
 # in ./dlite
 if(APPLE)
   set_target_properties(dlite-plugins-python PROPERTIES
-    BUILD_RPATH "@loader_path/../../../"
-    INSTALL_RPATH "@loader_path/../../../"
+    BUILD_RPATH "@loader_path/../../.."
+    INSTALL_RPATH "@loader_path/../../.."
     )
 else()
   set_target_properties(dlite-plugins-python PROPERTIES
     WINDOWS_EXPORT_ALL_SYMBOLS ON
-    BUILD_RPATH "$ORIGIN/../../../"
-    INSTALL_RPATH "$ORIGIN/../../../"
+    BUILD_RPATH "$ORIGIN/../../.."
+    INSTALL_RPATH "$ORIGIN/../../.."
     )
 endif()
 

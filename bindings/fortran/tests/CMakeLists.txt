@@ -50,6 +50,11 @@ foreach(test ${tests})
     ${CMAKE_CURRENT_BINARY_DIR}
     )
 
+  # TODO: Change to generators for dlite, dlite-utils etc as easier to maintain
+  set_property(TARGET ${test} PROPERTY
+    INSTALL_RPATH ${dlite_BINARY_DIR}/src;${dlite_BINARY_DIR}/src/utils;$<TARGET_FILE_DIR:dlite-fortran>
+    )
+
   set(name ${test}-f90)
   add_test(
     NAME ${name}

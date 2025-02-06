@@ -11,8 +11,8 @@ endif()
 # dlite-getuuid
 add_executable(dlite-getuuid dlite-getuuid.c)
 target_link_libraries(dlite-getuuid
-  dlite-static
-  dlite-utils-static
+  dlite
+  dlite-utils
   ${extra_link_libraries}
 )
 target_include_directories(dlite-getuuid PRIVATE
@@ -23,8 +23,8 @@ target_include_directories(dlite-getuuid PRIVATE
 # dlite-codegen
 add_executable(dlite-codegen dlite-codegen.c)
 target_link_libraries(dlite-codegen
-  dlite-static
-  dlite-utils-static
+  dlite
+  dlite-utils
   ${extra_link_libraries}
 )
 if(CMAKE_SIZEOF_VOID_P EQUAL 4)
@@ -36,27 +36,12 @@ target_include_directories(dlite-codegen PRIVATE
   ${dlite_BINARY_DIR}/src
 )
 
-# executable is in ./bin, find
-# libdlite.so, libdlite-utils.so (or lib*.dylib on macOS)
-# in ./lib
-if(APPLE)
-  set_target_properties(dlite-codegen PROPERTIES
-    BUILD_RPATH "@loader_path/../lib/"
-    INSTALL_RPATH "@loader_path/../lib/"
-  )
-else()
-  set_target_properties(dlite-codegen PROPERTIES
-    BUILD_RPATH "$ORIGIN/../lib/"
-    INSTALL_RPATH "$ORIGIN/../lib/"
-    )
-endif()
-
 
 # dlite-env
 add_executable(dlite-env dlite-env.c)
 target_link_libraries(dlite-env
-  dlite-static
-  dlite-utils-static
+  dlite
+  dlite-utils
   ${extra_link_libraries}
 )
 target_include_directories(dlite-env PRIVATE
@@ -64,19 +49,44 @@ target_include_directories(dlite-env PRIVATE
   ${dlite_BINARY_DIR}/src
 )
 
-# executable is in ./bin, find
-# libdlite.so, libdlite-utils.so (or lib*.dylib on macOS)
-# in ./lib
+
+# EXECUTABLE RPATH/ RUNPATH: dlite-getuuid dlite-codegen dlite-env
+# ===============================
+# 
+# This executable will be in three different paths:
+# 
+# Build
+#   ${CMAKE_BINARY_DIR}/tools
+# 
+# Install
+#   ${CMAKE_INSTALL_PREFIX}/bin
+#   ${DLITE_PYTHONPATH}/dlite/share/dlite/bin
+# 
+#   Where:
+#     ${DLITE_PYTHONPATH} = ${CMAKE_INSTALL_PREFIX}/lib/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/site-packages
+# 
+# The two linked libraries will be copied into the below locations:
+#   ${CMAKE_INSTALL_PREFIX}/lib
+#   ${DLITE_PYTHONPATH}/dlite
+# 
+# 
+# Two relative paths are thus needed.
+# 
+# Note: lib can be lib64 on some Linux platforms e.g. Fedora and SuSE:
+#   https://docs.python.org/3/using/configure.html#cmdoption-with-platlibdir
+
 if(APPLE)
-  set_target_properties(dlite-env PROPERTIES
-    BUILD_RPATH "@loader_path/../lib/"
-    INSTALL_RPATH "@loader_path/../lib/"
+  set_target_properties(dlite-getuuid dlite-codegen dlite-env
+    PROPERTIES
+      BUILD_WITH_INSTALL_RPATH FALSE
+      INSTALL_RPATH "@executable_path/../lib;@executable_path/../../.."
   )
 else()
-  set_target_properties(dlite-env PROPERTIES
-    BUILD_RPATH "$ORIGIN/../lib/"
-    INSTALL_RPATH "$ORIGIN/../lib/"
-    )
+  set_target_properties(dlite-env
+    PROPERTIES
+      BUILD_WITH_INSTALL_RPATH FALSE
+      INSTALL_RPATH '$ORIGIN/../lib;$ORIGIN/../../..'
+  )
 endif()
 
 

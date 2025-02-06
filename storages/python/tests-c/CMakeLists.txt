@@ -92,6 +92,11 @@ foreach(test ${tests})
   )
   add_dependencies(${test} copy-dlite-plugins-python)
 
+  # TODO: Change to generators for dlite, dlite-utils etc as easier to maintain
+  set_property(TARGET ${test} PROPERTY
+    INSTALL_RPATH ${dlite_BINARY_DIR}/src;${dlite_BINARY_DIR}/src/utils;$<TARGET_FILE_DIR:dlite-plugins-python>
+    )
+
   add_test(
     NAME ${test}
     COMMAND ${RUNNER} ${test}

@@ -25,6 +25,22 @@ target_include_directories(dlite-plugins-hdf5 PUBLIC
   ${HDF5_INCLUDE_DIRS}
   )
 
+# library is in ./dlite/share/dlite/storage-plugins, find
+# _dlite.so, libdlite.so, libdlite-utils.so (or lib*.dylib on macOS)
+# in ./dlite
+if(APPLE)
+set_target_properties(dlite-plugins-json PROPERTIES
+  BUILD_RPATH "@loader_path/../../.."
+  INSTALL_RPATH "@loader_path/../../.."
+  )
+else()
+set_target_properties(dlite-plugins-json PROPERTIES
+  WINDOWS_EXPORT_ALL_SYMBOLS ON
+  BUILD_RPATH "$ORIGIN/../../.."
+  INSTALL_RPATH "$ORIGIN/../../.."
+  )
+endif()
+
 if(${HDF5_DEPENDENCIES})
   add_dependencies(dlite-plugins-hdf5 ${HDF5_DEPENDENCIES} uuidProj)
 endif()
@@ -35,13 +51,13 @@ set_target_properties(dlite-plugins-hdf5 PROPERTIES
 
 # Simplify plugin search path for testing in build tree, copy target
 # to ${dlite_BINARY_DIR}/plugins
-ADD_CUSTOM_COMMAND(
-  TARGET dlite-plugins-hdf5
-  POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    $<TARGET_FILE:dlite-plugins-hdf5>
-    ${dlite_BINARY_DIR}/plugins
-  )
+# ADD_CUSTOM_COMMAND(
+#   TARGET dlite-plugins-hdf5
+#   POST_BUILD
+#   COMMAND ${CMAKE_COMMAND} -E copy_if_different
+#     $<TARGET_FILE:dlite-plugins-hdf5>
+#     ${dlite_BINARY_DIR}/plugins
+#   )
 
 install(
   TARGETS dlite-plugins-hdf5

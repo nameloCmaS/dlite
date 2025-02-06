@@ -156,12 +156,25 @@ endif()
 #set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
 
 
+# Linker RPATH / RUNPATH
+# ----------------------
+
+# Useful info at:
+# https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/RPATH-handling
+set(CMAKE_SKIP_RPATH FALSE)
+if(APPLE)
+  set(CMAKE_INSTALL_RPATH "")
+  set(CMAKE_MACOSX_RPATH TRUE)
+  set(CMAKE_SKIP_BUILD_RPATH FALSE)
+  set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+  set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
+elseif(UNIX)
+  set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+endif()
+
+
 # Install paths
 # -------------
-
-# Ensure MacOS has rpaths set in libraries
-set(CMAKE_MACOSX_RPATH 1)
-
 
 # Install path for CMake files
 if(WIN32 AND NOT CYGWIN)

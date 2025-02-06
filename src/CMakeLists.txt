@@ -132,14 +132,14 @@ target_link_libraries(dlite-static ${link_args})
 
 if(APPLE)
   set_target_properties(dlite PROPERTIES
-    BUILD_RPATH "@loader_path/"
-    INSTALL_RPATH "@loader_path/"
+    BUILD_RPATH "@loader_path"
+    INSTALL_RPATH "@loader_path"
     )
 else()
   set_target_properties(dlite PROPERTIES
     WINDOWS_EXPORT_ALL_SYMBOLS ON
-    BUILD_RPATH "$ORIGIN/"
-    INSTALL_RPATH "$ORIGIN/"
+    BUILD_RPATH "$ORIGIN"
+    INSTALL_RPATH "$ORIGIN"
     )
 endif()
 
