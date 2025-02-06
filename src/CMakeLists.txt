@@ -130,6 +130,9 @@ endif()
 target_link_libraries(dlite ${link_args})
 target_link_libraries(dlite-static ${link_args})
 
+# Todo: Remove temp debug
+message(STATUS "link_args = ${link_args}")
+
 if(APPLE)
   set_target_properties(dlite PROPERTIES
     BUILD_RPATH "@loader_path"
