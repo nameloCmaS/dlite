@@ -65,7 +65,6 @@ set_source_files_properties(dlite.i
     SWIG_MODULE_NAME "dlite"
     )
 
-#SET(CMAKE_SKIP_BUILD_RPATH TRUE)
 swig_add_library(dlitepy
   TYPE SHARED
   LANGUAGE python
@@ -78,37 +77,36 @@ swig_add_library(dlitepy
 # LIBRARY RPATH/ RUNPATH: dlitepy
 # ===============================
 # 
-# This library will be run as a standalone Python extension from:
+# At build, this and the other libraries will be copied to the same directory.
+# 
+# This library will be loaded by Python as an extension module from the directory:
+# 
 #   ${CMAKE_INSTALL_PREFIX}/lib/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/site-packages/dlite
-#   OR USING DLITE DIR VARS:
+#   - OR - using CMake dlite directory variables:
 #   ${DLITE_PYTHONPATH}/dlite
 # 
-# The two linked libraries will be copied into the above noted folder.
-# 
-# Note: lib can be lib64 on some Linux platforms e.g. Fedora and SuSE:
-#   https://docs.python.org/3/using/configure.html#cmdoption-with-platlibdir
+# The two linked libraries will be copied into the above noted folder at install.
 
 if(APPLE)
-# macOS needs full paths hence @loader_path
-  set_target_properties(dlitepy
-    PROPERTIES
-      BUILD_RPATH "@loader_path"
-      INSTALL_RPATH "@loader_path"
-      OUTPUT_NAME "dlite"
-  )
+  set_target_properties(dlitepy PROPERTIES
+    BUILD_WITH_INSTALL_RPATH FALSE
+    BUILD_RPATH "${dlite_BINARY_DIR}/src;${dlite_BINARY_DIR}/src/utils"
+    INSTALL_RPATH "@loader_path"
+    OUTPUT_NAME "dlite"
+    )
 else()
-  # Linux uses DT_RUNPATH which can be overridden by the environment variable LD_LIBRARY_PATH
-  set_target_properties(dlitepy
-    PROPERTIES
-      BUILD_RPATH "$ORIGIN"
-      INSTALL_RPATH "$ORIGIN"
-      OUTPUT_NAME "dlite"
-  )
+  set_target_properties(dlitepy PROPERTIES
+    BUILD_WITH_INSTALL_RPATH FALSE
+    BUILD_RPATH "${dlite_BINARY_DIR}/src;${dlite_BINARY_DIR}/src/utils"
+    INSTALL_RPATH "$ORIGIN"
+    OUTPUT_NAME "dlite"
+    )
 endif()
 
 
-# Python only looks for .so for compiled extension modules on all Unix platforms including MacOS 
-# which would usually use .dylib thus change for just the extension module.
+# Python requires .so for compiled extension modules on all Unix platforms. This includes macOS 
+# which would usually use .dylib. Thus change on macOS for just this target - the Python extension module.
+# `swig_add_library` changes extension to .pyd for Windows, but does not chnage it for macOS (possible bug).
 if(APPLE)
   set_target_properties(dlitepy PROPERTIES
     SUFFIX ".so"

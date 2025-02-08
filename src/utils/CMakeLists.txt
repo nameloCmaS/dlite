@@ -399,6 +399,32 @@ endif()
 target_link_libraries(dlite-utils ${link_libs})
 target_link_libraries(dlite-utils-static ${link_libs})
 
+# LIBRARY RPATH/ RUNPATH: dlite-utils
+# ===================================
+# 
+# At build, set absolute RPATHS to the other library.
+# 
+# At install the library will be loaded from the directory:
+# 
+#   ${CMAKE_INSTALL_PREFIX}/lib/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/site-packages/dlite
+#   - OR - using CMake dlite directory variables:
+#   ${DLITE_PYTHONPATH}/dlite
+# 
+# The linked library will be copied into the above noted folder at install.
+
+# if(APPLE)
+#   set_target_properties(dlite-utils PROPERTIES
+#     BUILD_WITH_INSTALL_RPATH FALSE
+#     BUILD_RPATH "${dlite_BINARY_DIR}/src"
+#     INSTALL_RPATH "@loader_path"
+#     )
+# else()
+#   set_target_properties(dlite-utils PROPERTIES
+#     BUILD_WITH_INSTALL_RPATH FALSE
+#     BUILD_RPATH "${dlite_BINARY_DIR}/src"
+#     INSTALL_RPATH "$ORIGIN"
+#     )
+# endif()
 
 ## create list of headers to install from ${sources}
 set(headers "")
@@ -419,8 +445,8 @@ set_target_properties(dlite-utils PROPERTIES PUBLIC_HEADER "${headers}")
 install(
   TARGETS dlite-utils dlite-utils-static
   EXPORT  dliteTargets
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib #TODO: May need to replace lib with ${LIBDIR}
+  ARCHIVE DESTINATION lib #TODO: May need to replace lib with ${LIBDIR}
   RUNTIME DESTINATION bin
   PUBLIC_HEADER DESTINATION include/dlite/utils
   INCLUDES DESTINATION include/dlite/utils

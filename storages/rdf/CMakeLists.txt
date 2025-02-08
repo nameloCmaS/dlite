@@ -22,18 +22,35 @@ target_include_directories(dlite-plugins-rdf PUBLIC
   ${RAPTOR_INCLUDE_DIRS}
   )
 
-# library is in ./dlite/share/dlite/storage-plugins, find
-# _dlite.so, libdlite.so, libdlite-utils.so (or lib*.dylib on macOS)
-# in ./dlite
+# PLUGIN RPATH/ RUNPATH: dlite-plugins-rdf
+# ========================================
+# 
+# At build, set absolute RPATHS to the other libraries.
+# 
+# At install the library will be loaded from the directory:
+# 
+#   ${CMAKE_INSTALL_PREFIX}/lib/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/site-packages/dlite/share/dlite/storage-plugins
+#   - OR - using CMake dlite directory variables:
+#   ${DLITE_PYTHONPATH}/dlite/share/dlite/storage-plugins
+# 
+# 
+# Needs to locate the libraries in:
+# 
+#   ${DLITE_PYTHONPATH}/dlite
+# 
+# 
+# The two linked libraries will be copied into the above noted folder at install.
+
 if(APPLE)
-  set_target_properties(dlite-plugins-json PROPERTIES
-    BUILD_RPATH "@loader_path/../../.."
+  set_target_properties(dlite-plugins-rdf PROPERTIES
+    BUILD_WITH_INSTALL_RPATH FALSE
+    BUILD_RPATH "${dlite_BINARY_DIR}/src;${dlite_BINARY_DIR}/src/utils"
     INSTALL_RPATH "@loader_path/../../.."
     )
 else()
-  set_target_properties(dlite-plugins-json PROPERTIES
-    WINDOWS_EXPORT_ALL_SYMBOLS ON
-    BUILD_RPATH "$ORIGIN/../../.."
+  set_target_properties(dlite-plugins-rdf PROPERTIES
+    BUILD_WITH_INSTALL_RPATH FALSE
+    BUILD_RPATH "${dlite_BINARY_DIR}/src;${dlite_BINARY_DIR}/src/utils"
     INSTALL_RPATH "$ORIGIN/../../.."
     )
 endif()

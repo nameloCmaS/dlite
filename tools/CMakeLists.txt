@@ -51,7 +51,7 @@ target_include_directories(dlite-env PRIVATE
 
 
 # EXECUTABLE RPATH/ RUNPATH: dlite-getuuid dlite-codegen dlite-env
-# ===============================
+# ================================================================
 # 
 # This executable will be in three different paths:
 # 
@@ -70,22 +70,24 @@ target_include_directories(dlite-env PRIVATE
 #   ${DLITE_PYTHONPATH}/dlite
 # 
 # 
-# Two relative paths are thus needed.
+# Two relative paths are thus needed for the install; absolute paths given for build versions.
+# The 'bin' versions locate the ../lib libraries; the 'share' versions locate the extension module libraries.
 # 
 # Note: lib can be lib64 on some Linux platforms e.g. Fedora and SuSE:
 #   https://docs.python.org/3/using/configure.html#cmdoption-with-platlibdir
+#   $LIB will be replaced by the dynamic linker ld-linux*.so* to suit the system's convention.
 
 if(APPLE)
-  set_target_properties(dlite-getuuid dlite-codegen dlite-env
-    PROPERTIES
-      BUILD_WITH_INSTALL_RPATH FALSE
-      INSTALL_RPATH "@executable_path/../lib;@executable_path/../../.."
+  set_target_properties(dlite-getuuid dlite-codegen dlite-env PROPERTIES
+    BUILD_WITH_INSTALL_RPATH FALSE
+    BUILD_RPATH "${dlite_BINARY_DIR}/src;${dlite_BINARY_DIR}/src/utils"
+    INSTALL_RPATH "@executable_path/../lib;@executable_path/../../.."
   )
 else()
-  set_target_properties(dlite-getuuid dlite-codegen dlite-env
-    PROPERTIES
-      BUILD_WITH_INSTALL_RPATH FALSE
-      INSTALL_RPATH "$ORIGIN/../lib;$ORIGIN/../../.."
+  set_target_properties(dlite-getuuid dlite-codegen dlite-env PROPERTIES
+    BUILD_WITH_INSTALL_RPATH FALSE
+    BUILD_RPATH "${dlite_BINARY_DIR}/src;${dlite_BINARY_DIR}/src/utils"
+    INSTALL_RPATH "$ORIGIN/../$LIB;$ORIGIN/../../.."
   )
 endif()
 
@@ -98,6 +100,11 @@ add_subdirectory(tests)
 install(
   TARGETS dlite-getuuid dlite-codegen dlite-env
   DESTINATION bin
+)
+# Ensure RPATHS updated correctly
+install(
+  TARGETS dlite-getuuid dlite-codegen dlite-env
+  DESTINATION ${Python3_PREFIX}share/dlite/bin
 )
 install(
   PROGRAMS dlite-docker

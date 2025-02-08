@@ -129,22 +129,37 @@ set(link_args
   ${link_libraries_extra}
   )
 if(NOT WITH_STATIC_PYTHON)
-  # CMAKE_DL_LIBS is empty on MacOS
+  # CMAKE_DL_LIBS is empty on macOS
   list(APPEND link_args ${CMAKE_DL_LIBS})
 endif()
 
 target_link_libraries(dlite ${link_args})
 target_link_libraries(dlite-static ${link_args})
 
+# LIBRARY RPATH/ RUNPATH: dlite
+# =============================
+# 
+# At build, set absolute RPATHS to the other library.
+# 
+# At install the library will be loaded from the directory:
+# 
+#   ${CMAKE_INSTALL_PREFIX}/lib/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/site-packages/dlite
+#   - OR - using CMake dlite directory variables:
+#   ${DLITE_PYTHONPATH}/dlite
+# 
+# The linked library will be copied into the above noted folder at install.
+
 if(APPLE)
   set_target_properties(dlite PROPERTIES
-    BUILD_RPATH "@loader_path"
+    BUILD_WITH_INSTALL_RPATH FALSE
+    BUILD_RPATH "${dlite_BINARY_DIR}/src/utils"
     INSTALL_RPATH "@loader_path"
     )
 else()
   set_target_properties(dlite PROPERTIES
     WINDOWS_EXPORT_ALL_SYMBOLS ON
-    BUILD_RPATH "$ORIGIN"
+    BUILD_WITH_INSTALL_RPATH FALSE
+    BUILD_RPATH "${dlite_BINARY_DIR}/src/utils"
     INSTALL_RPATH "$ORIGIN"
     )
 endif()
@@ -153,7 +168,6 @@ set_target_properties(dlite-static PROPERTIES
   POSITION_INDEPENDENT_CODE ON
   )
 
-#set_property(TARGET dlite-static-pic PROPERTY POSITION_INDEPENDENT_CODE ON)
 set_source_files_properties(
     dlite-misc.c
     dlite-storage.c
@@ -195,8 +209,8 @@ set_target_properties(dlite PROPERTIES PUBLIC_HEADER "${headers}")
 install(
   TARGETS dlite dlite-static
   EXPORT  dliteTargets
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib #TODO: May need to replace lib with ${LIBDIR}
+  ARCHIVE DESTINATION lib #TODO: May need to replace lib with ${LIBDIR}
   RUNTIME DESTINATION bin
   PUBLIC_HEADER DESTINATION include/dlite
   INCLUDES DESTINATION include/dlite
