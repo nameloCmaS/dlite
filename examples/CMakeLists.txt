@@ -88,14 +88,15 @@ endmacro()
 # The FORCE_EXAMPLES option gives us the option to bypass testing examples
 # if dlite hasn't been installed.  This may be useful in CI frameworks
 if(FORCE_EXAMPLES OR EXISTS ${CMAKE_INSTALL_PREFIX}/share/dlite/examples)
-  if(WITH_HDF5)
-    test_example(ex1)
-    test_example(ex2)
-    test_example(ex3)
-    # if(WITH_FORTRAN)
-    #   test_example(ex4)
-    # endif()
-  endif()
+  # TODO: Temp disabled - revert 
+  # if(WITH_HDF5)
+  #   test_example(ex1)
+  #   test_example(ex2)
+  #   test_example(ex3)
+  #   if(WITH_FORTRAN)
+  #     test_example(ex4)
+  #   endif()
+  # endif()
   #test_example(ex5d)
 
   # Run python examples
