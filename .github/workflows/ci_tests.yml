@@ -2,7 +2,7 @@ name: CI tests
 
 # This CI builds DLite and runs (almost) all tests.
 #
-# The following plugins are not tested here, since they depends on an external service:
+# The following plugins are not tested here, since they depend on an external service:
 #
 # Protocol plugins:
 #   - sftp
@@ -22,7 +22,7 @@ jobs:
     strategy:
       matrix:
         # os: [ubuntu-latest, windows-latest, macos-latest]
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -37,7 +37,7 @@ jobs:
         with:
           python-version: "3.10"
           # cache: "pip"
-          
+
       # Based on: https://github.com/pydata/xarray/blob/main/.github/workflows/ci.yaml
       - name: Set environment variables
         run: |
@@ -52,7 +52,19 @@ jobs:
         run: |
           if [[ ${{ matrix.os }} == windows* ]] ;
           then
-            echo "CONDA_ENV_FILE=ci/requirements/environment-windows.yml" >> $GITHUB_ENV
+            # CHOCO_INSTALL=(
+            #   # libxml2-dev
+            #   # libxslt-dev
+            #   # libhdf5-dev
+            #   doxygen.install
+            #   Graphviz
+            #   # python3
+            #   # python3-pip
+            #   # python3-dev
+            #   # python3-numpy
+            #   # python3-yaml
+            # )
+            # choco install ${CHOCO_INSTALL[@]}
             
           elif [[ ${{ matrix.os }} == ubuntu* ]] ;
           then
@@ -87,7 +99,7 @@ jobs:
             echo "Unknown os `${{ matrix.os }}`. Should not reach here!"
           fi
 
-  
+
       - name: Install Python dependencies
         run: |
           which python3
@@ -96,17 +108,17 @@ jobs:
           python3 -m pip install --upgrade pip
           python3 -m pip install -U setuptools wheel
           python3 -m pip install -r requirements.txt -r requirements_full.txt -r requirements_dev.txt
-  
+
       - name: Check numpy
         run: |
           python3 -c 'import numpy as np; print(np.get_include())'
-  
+
       - name: List installed Python packages
         run: |
           uname -a
           python --version
           pip freeze
-  
+
       - name: Configure
         env:
           DLITE_IMPORTSKIP_EXITCODE: 1
@@ -143,39 +155,6 @@ jobs:
           DLITE_PYDEBUG: ""
         run: ctest || ctest --rerun-failed --output-on-failure -V
         working-directory: ./build
-  
-      # TODO: Temp only debug output...
-      # On Linux the default path is:
-      #   /home/runner/work/<repo>/<repo>
-      # accessible as $GITHUB_WORKSPACE
-      # In this repo's case it is:
-      #   /home/runner/work/dlite/dlite
-      # which unless the default is overridden,
-      # the working-directory nodes are relative to.
-      # 
-      # Install files for this repo are in in:
-      #   /home/runner/.local
-      # 
-      # - name: Check RPATHS on Linux for examples
-      #   working-directory: ./build/examples
-      #   run: |
-      #     echo Current dir:
-      #     echo $PWD
-      #     if [[ ${{ matrix.os }} == ubuntu* ]] ;
-      #     then
-      #         # sudo apt-get install binutils
-      #         # objdump -x ./ex1/dlite-example-1 | grep RPATH
-      #         # objdump -x ./ex2/dlite-example-2 | grep RPATH
-      #         # objdump -x ./ex3/dlite-example-3 | grep RPATH
-      #         # objdump -x ./ex4/dlite-example-4 | grep RPATH
-
-      #     elif [[ ${{ matrix.os }} == macos* ]] ;
-      #     then
-      #         otool -l ./ex1/dlite-example-1 | grep RPATH -A2
-      #         otool -l ./ex2/dlite-example-2 | grep RPATH -A2
-      #         otool -l ./ex3/dlite-example-3 | grep RPATH -A2
-      #         otool -l ./ex4/dlite-example-4 | grep RPATH -A2
-      #     fi
 
       - name: Upload Build as Artifact
         uses: actions/upload-artifact@v4
@@ -188,16 +167,16 @@ jobs:
           DLITE_BEHAVIOR: OFF
         run: ctest || ctest --rerun-failed --output-on-failure -V
         working-directory: ./build
-  
+
       - name: Test with all behavior changes enabled
         env:
           DLITE_BEHAVIOR: ON
         run: ctest || ctest --rerun-failed --output-on-failure -V
         working-directory: ./build
-  
+
       - name: Build Linux wheel
         run: python3 -m pip wheel -w dist ./python
-  
+
       - name: Install python package and test the installation
         run: |
           python3 -m pip install --user dist/*.whl
