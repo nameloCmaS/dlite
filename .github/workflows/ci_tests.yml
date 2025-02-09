@@ -116,9 +116,7 @@ jobs:
             # TODO: The below can be updated to use the action at
             # https://github.com/fortran-lang/setup-fortran
             # which can be used for the Windows install also
-            # This will avoid updating the version to suit the updated runners
-            # from time to time
-            MACOS_GFORTRAN="-DCMAKE_Fortran_COMPILER=$(which gfortran-13)"
+            MACOS_GFORTRAN="-DCMAKE_Fortran_COMPILER=$(brew --prefix gfortran)/bin/gfortran"
           fi
 
           CFLAGS='-Wno-missing-field-initializers' \
