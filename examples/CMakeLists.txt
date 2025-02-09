@@ -54,29 +54,24 @@ macro(test_example example)
       ${CMAKE_CURRENT_SOURCE_DIR}/${example}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${example}
     )
+  # RPATHS for the examples will be the full path as they link to the
+  # installed libraries which are outside of the build paths.
   add_test(
     NAME ${example}-build
     COMMAND ${CMAKE_COMMAND} --build .
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${example}
     )
-  # add_test(
-  #   NAME ${example}-test
-  #   COMMAND ${CMAKE_CTEST_COMMAND} --rerun-failed --output-on-failure
-  #   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${example}
-  #   )
+  add_test(
+    NAME ${example}-test
+    COMMAND ${CMAKE_CTEST_COMMAND} --rerun-failed --output-on-failure
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${example}
+    )
   set_property(TEST ${example}-config  PROPERTY DEPENDS ${example}-mkdir)
   set_property(TEST ${example}-build   PROPERTY DEPENDS ${example}-config)
-  # set_property(TEST ${example}-test    PROPERTY DEPENDS ${example}-build)
-  # set_property(TEST ${example}-test PROPERTY ENVIRONMENT
-  #   LD_LIBRARY_PATH="${dlite_LD_LIBRARY_PATH_NATIVE}:${Python3_LIBRARY_DIRS}"
-  # )
-
-  # FIXME - enable this test again
-  # Currently the tests fails on GitHub with the message
-  #
-  # error while loading shared libraries: libpython3.10.so.1.0: cannot open shared object file: No such file or directory
-  #
-  # set_property(TEST ${example}-test    PROPERTY DISABLED True)
+  set_property(TEST ${example}-test    PROPERTY DEPENDS ${example}-build)
+  set_property(TEST ${example}-test PROPERTY ENVIRONMENT
+    LD_LIBRARY_PATH="${dlite_LD_LIBRARY_PATH_NATIVE}:${Python3_LIBRARY_DIRS}"
+  )
 endmacro()
 
 
@@ -88,16 +83,15 @@ endmacro()
 # The FORCE_EXAMPLES option gives us the option to bypass testing examples
 # if dlite hasn't been installed.  This may be useful in CI frameworks
 if(FORCE_EXAMPLES OR EXISTS ${CMAKE_INSTALL_PREFIX}/share/dlite/examples)
-  # TODO: Temp disabled - revert 
-  # if(WITH_HDF5)
-  #   test_example(ex1)
-  #   test_example(ex2)
-  #   test_example(ex3)
-  #   if(WITH_FORTRAN)
-  #     test_example(ex4)
-  #   endif()
-  # endif()
-  #test_example(ex5d)
+  if(WITH_HDF5)
+    test_example(ex1)
+    test_example(ex2)
+    test_example(ex3)
+    if(WITH_FORTRAN)
+      test_example(ex4)
+    endif()
+  endif()
+  # test_example(ex5d)
 
   # Run python examples
   foreach(name ${python_examples})
