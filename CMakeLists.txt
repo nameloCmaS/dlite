@@ -185,7 +185,6 @@ if(APPLE)
 endif()
   # Linux uses DT_RUNPATH which can be overridden by the environment variable LD_LIBRARY_PATH
   # $ORIGIN is replaced at runtime by the directory the target is loaded from.
-  # $LIB is also replaced with either lib, lib64, and may also include the multipath triplet.
 
 
 # Install paths

@@ -75,7 +75,6 @@ target_include_directories(dlite-env PRIVATE
 # 
 # Note: lib can be lib64 on some Linux platforms e.g. Fedora and SuSE:
 #   https://docs.python.org/3/using/configure.html#cmdoption-with-platlibdir
-#   $LIB will be replaced by the dynamic linker ld-linux*.so* to suit the system's convention.
 
 if(APPLE)
   set_target_properties(dlite-getuuid dlite-codegen dlite-env PROPERTIES
@@ -87,7 +86,7 @@ else()
   set_target_properties(dlite-getuuid dlite-codegen dlite-env PROPERTIES
     BUILD_WITH_INSTALL_RPATH FALSE
     BUILD_RPATH "${dlite_BINARY_DIR}/src;${dlite_BINARY_DIR}/src/utils"
-    INSTALL_RPATH "$ORIGIN/../$LIB;$ORIGIN/../../.."
+    INSTALL_RPATH "$ORIGIN/../lib;$ORIGIN/../lib64;$ORIGIN/../../.."
   )
 endif()
 
