@@ -30,7 +30,7 @@ dlite_codegen(
 add_compile_options("-DDLITE_ROOT=${DLITE_ROOT}")
 if(APPLE)
   execute_process(
-    COMMAND "bash $(brew --prefix gfortran)/bin/gfortran"
+    COMMAND "bash echo $(brew --prefix gfortran)/bin/gfortran"
     OUTPUT_VARIABLE CMAKE_Fortran_COMPILER
   )
 endif()
