@@ -19,34 +19,36 @@ on: [push]
 
 jobs:
   build:
-    strategy:
-      matrix:
-        # os: [ubuntu-latest, windows-latest, macos-latest]
-        os: [ubuntu-latest, macos-latest, windows-latest]
+    name: dlite-build ${{ matrix.os }} py${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
     defaults:
       run:
-        shell: bash -l {0}
-    runs-on: ${{ matrix.os }}
+        shell: bash
+        working-directory: ./build
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.10"]
+        # python-version: ["3.8", "3.10", "3.13"]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # TODO: Setup matrix with multiple versions
       # TODO: Setup cache
-      # TODO: Fix MacOS & Windows tasks
-      - name: Setup Python 3.10
+      # TODO: Fix Windows tasks
+      - name: Setup Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
-          # cache: "pip"
+          python-version: ${{ matrix.python-version }}
+          cache: "pipenv"
 
       # Based on: https://github.com/pydata/xarray/blob/main/.github/workflows/ci.yaml
       - name: Set environment variables
         run: |
-          echo "PYTHON_VERSION=3.10" >> $GITHUB_ENV
+          echo "PYTHON_VERSION=${{ matrix.python-version }}" >> $GITHUB_ENV
 
 
-        # We do not install rdflib0-dev here, since we want to test
+        # We do not install rdflib0-dev here, since we want to  
         # DLite both with and without rdflib (Redland) support and the
         # case with rdflib is already covered by the ci_build_wheel
         # workflow for Linux systems.
@@ -108,23 +110,28 @@ jobs:
           python3 --version
           python3 -m pip --version
           python3 -m pip install --upgrade pip
-          python3 -m pip install -U setuptools wheel
-          python3 -m pip install -r requirements.txt -r requirements_full.txt -r requirements_dev.txt
+          python3 -m pip install pipenv
+          pipenv uninstall setuptools wheel
+          pipenv install -r requirements.txt -r requirements_full.txt -r requirements_dev.txt
 
       - name: Check numpy
         run: |
+          pipenv shell
+
           python3 -c 'import numpy as np; print(np.get_include())'
 
       - name: List installed Python packages
         run: |
           uname -a
           python --version
-          pip freeze
+          pipenv lock
 
       - name: Configure
         env:
           DLITE_IMPORTSKIP_EXITCODE: 1
         run: |
+          pipenv shell
+
           if [[ ${{ matrix.os }} == macos* ]] ;
           then
             # TODO: The below can be updated to use the action at
@@ -143,20 +150,20 @@ jobs:
 
       - name: Build
         run: |
-          echo Current dir:
-          echo $PWD
+          pipenv shell
+
           cmake --build .
-        working-directory: ./build
 
       - name: Install
         run: cmake --install .
-        working-directory: ./build
 
       - name: Test
         env:
           DLITE_PYDEBUG: ""
-        run: ctest || ctest --rerun-failed --output-on-failure -V
-        working-directory: ./build
+        run: |
+          pipenv shell
+
+          ctest || ctest --rerun-failed --output-on-failure -V
 
       - name: Upload Build as Artifact
         uses: actions/upload-artifact@v4
@@ -167,19 +174,28 @@ jobs:
       - name: Test with all behavior changes disabled
         env:
           DLITE_BEHAVIOR: OFF
-        run: ctest || ctest --rerun-failed --output-on-failure -V
-        working-directory: ./build
+        run: |
+          pipenv shell
+
+          ctest || ctest --rerun-failed --output-on-failure -V
 
       - name: Test with all behavior changes enabled
         env:
           DLITE_BEHAVIOR: ON
-        run: ctest || ctest --rerun-failed --output-on-failure -V
-        working-directory: ./build
+        run: |
+          pipenv shell
+
+          ctest || ctest --rerun-failed --output-on-failure -V
 
       - name: Build Linux wheel
-        run: python3 -m pip wheel -w dist ./python
+        run: |
+          pipenv shell
+
+          python3 -m pip wheel -w dist ./python
 
       - name: Install python package and test the installation
         run: |
+          pipenv shell
+
           python3 -m pip install --user dist/*.whl
           python3 bindings/python/tests/__main__.py
