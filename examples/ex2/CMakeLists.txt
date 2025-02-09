@@ -11,10 +11,8 @@ project(dlite-example-2
 
 set(CMAKE_MODULE_PATH
   ${CMAKE_MODULE_PATH}
-  ${DLITE_ROOT}/cmake
-  ${DLITE_ROOT}/cmake/Modules
-  ${DLITE_ROOT}/share/cmake
-  ${DLITE_ROOT}/share/cmake/Modules
+  ${DLITE_ROOT}/share/Modules
+  ${DLITE_ROOT}/share/dlite/cmake
   )
 find_package(dlite REQUIRED)
 
@@ -38,8 +36,6 @@ target_include_directories(dlite-example-2 PUBLIC
   ${CMAKE_CURRENT_BINARY_DIR}
   )
 
-
-enable_testing()
 
 add_test(
   NAME dlite-example-2

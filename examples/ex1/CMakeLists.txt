@@ -8,21 +8,23 @@ endif()
 project(dlite-example-1
   VERSION 0.1
   LANGUAGES C)
-
+  
+set(CMAKE_MODULE_PATH
+  ${CMAKE_MODULE_PATH}
+  ${DLITE_ROOT}/share/Modules
+  ${DLITE_ROOT}/share/dlite/cmake
+  )
 find_package(dlite REQUIRED)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${DLITE_ROOT}/share/dlite/cmake)
-
 include(dliteCodeGen)
-
-add_compile_options("-DDLITE_ROOT=${DLITE_ROOT}")
 
 dlite_codegen(
   chemistry.h
   c-header
   json://${CMAKE_CURRENT_SOURCE_DIR}/Chemistry-0.1.json?mode=r
   )
-
+  
+add_compile_options("-DDLITE_ROOT=${DLITE_ROOT}")
 
 link_directories(${DLITE_LIBRARY_DIR})
 
@@ -33,8 +35,6 @@ target_include_directories(dlite-example-1 PUBLIC
   ${CMAKE_CURRENT_BINARY_DIR}
   )
 
-
-enable_testing()
 
 add_test(
   NAME dlite-example-1
