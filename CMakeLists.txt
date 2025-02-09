@@ -468,7 +468,6 @@ if(WITH_FORTRAN)
 endif()
 
 # Unset extra_link_libraries if it is empty
-message(STATUS "extra_link_libraries = ${extra_link_libraries}")
 if(extra_link_libraries MATCHES "^[ \t\n\r;]*$")
   unset(extra_link_libraries)
 endif()
