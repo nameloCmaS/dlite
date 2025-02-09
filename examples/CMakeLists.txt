@@ -50,6 +50,7 @@ macro(test_example example)
       -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
       -DCMAKE_C_FLAGS=${CMAKE_C_FLAGS}
       -DDLITE_ROOT=${CMAKE_INSTALL_PREFIX}
+      -DCMAKE_Fortran_COMPILER=${CMAKE_Fortran_COMPILER}
       ${toolchain_opt}
       ${CMAKE_CURRENT_SOURCE_DIR}/${example}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${example}

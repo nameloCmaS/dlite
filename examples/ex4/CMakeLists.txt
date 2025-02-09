@@ -28,12 +28,6 @@ dlite_codegen(
 
   
 add_compile_options("-DDLITE_ROOT=${DLITE_ROOT}")
-if(APPLE)
-  execute_process(
-    COMMAND "bash echo $(brew --prefix gfortran)/bin/gfortran"
-    OUTPUT_VARIABLE CMAKE_Fortran_COMPILER
-  )
-endif()
 
 link_directories(${DLITE_LIBRARY_DIR})
 
