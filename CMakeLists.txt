@@ -5,7 +5,11 @@ cmake_minimum_required(VERSION 3.16)
 if(APPLE)
   # set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE) 
   # FIXME: Hack for now to allow testing of Github actions
-  set(CMAKE_OSX_ARCHITECTURES "arm64" CACHE STRING "" FORCE) 
+  set(CMAKE_OSX_ARCHITECTURES "arm64" CACHE STRING "" FORCE)
+  # https://developer.apple.com/support/xcode/
+  # https://github.com/actions/runner-images?tab=readme-ov-file#available-images
+  # Supported by Xcode 14.0.0
+  set(MACOSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Minimum macOS deployment version" FORCE)
 endif()
 
 project(dlite
