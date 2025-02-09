@@ -998,6 +998,20 @@ set(CPACK_RPM_PACKAGE_LICENSE "${dlite_LICENSE}")
 set(CPACK_RPM_PACKAGE_REQUIRES
   "python3, python3-numpy, redland, raptor2, hdf5")
 
+# TODO: ? macOS Bundle Generator
+# Required
+# set(CPACK_BUNDLE_NAME ${PROJECT_NAME})
+# set(CPACK_BUNDLE_PLIST XXX)
+# set(CPACK_BUNDLE_ICON "${dlite_SOURCE_DIR}/doc/figs/logo-circle.ico")
+# Optional
+# set(CPACK_BUNDLE_STARTUP_COMMAND XXX)
+# For App Store submission only
+# set(CPACK_BUNDLE_APPLE_CERT_APP XXX)
+# set(CPACK_BUNDLE_APPLE_ENTITLEMENTS XXX)
+# set(CPACK_BUNDLE_APPLE_CODESIGN_FILES XXX)
+# set(CPACK_BUNDLE_APPLE_CODESIGN_PARAMETER XXX)
+# set(CPACK_COMMAND_CODESIGN XXX)
+
 # Include CPack after configuring it...
 include(CPack)
 
