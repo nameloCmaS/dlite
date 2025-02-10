@@ -32,33 +32,17 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Create 'build' folder
-        run: mkdir build
-
-      # TODO: Setup cache
-      # TODO: Fix Windows tasks
       - name: Setup Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: "pipenv"
-        
+          cache: "pip"
+
 
       # Based on: https://github.com/pydata/xarray/blob/main/.github/workflows/ci.yaml
       - name: Set environment variables
         run: |
           echo "PYTHON_VERSION=${{ matrix.python-version }}" >> "$GITHUB_ENV"
-          # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#example-of-adding-a-system-path
-          # https://packaging.python.org/en/latest/tutorials/managing-dependencies/#installing-pipenv
-          # https://docs.python.org/3/library/sysconfig.html#user-scheme
-          if [[ ${{ matrix.os }} == windows* ]] ;
-          then
-            # Python version needs to be decimal place free i.e. 310 instead of 3.10
-            py_ver_win=${{ matrix.python-version }}
-            echo $(python3 -c "import site; from pathlib import Path; print(f\"{Path(site.getuserbase()) / 'Python${py_ver_win//.}' / 'Source'}\")") >> "$GITHUB_PATH"
-          else
-            echo $(python3 -c "import site; from pathlib import Path; print(f\"{Path(site.getuserbase()) / 'bin'}\")") >> "$GITHUB_PATH"
-          fi
 
 
         # We do not install rdflib0-dev here, since we want to  
@@ -123,29 +107,24 @@ jobs:
           python3 --version
           python3 -m pip --version
           python3 -m pip install --upgrade pip
-          python3 -m pip install --user pipenv
           python3 -m pip install -U setuptools wheel
-          pipenv install
+          python3 -m pip install -r requirements.txt -r requirements_full.txt -r requirements_dev.txt
 
       - name: Check numpy
         run: |
-          pipenv shell
-
           python3 -c 'import numpy as np; print(np.get_include())'
 
       - name: List installed Python packages
         run: |
-          pipenv shell
-
           uname -a
           python --version
+          pip freeze
 
       - name: Configure
         env:
           DLITE_IMPORTSKIP_EXITCODE: 1
+        working-directory: build
         run: |
-          pipenv shell
-          cd build
 
           if [[ ${{ matrix.os }} == macos* ]] ;
           then
@@ -164,23 +143,18 @@ jobs:
             ${MACOS_GFORTRAN}
 
       - name: Build
-        run: |
-          pipenv shell
-          cd build
-
-          cmake --build .
-
+        run: cmake --build .
+        working-directory: build
+  
       - name: Install
         run: cmake --install .
+        working-directory: build
 
       - name: Test
         env:
           DLITE_PYDEBUG: ""
-        run: |
-          pipenv shell
-          cd build
-
-          ctest || ctest --rerun-failed --output-on-failure -V
+        run: ctest || ctest --rerun-failed --output-on-failure -V
+        working-directory: build
 
       - name: Upload Build as Artifact
         uses: actions/upload-artifact@v4
@@ -191,30 +165,19 @@ jobs:
       - name: Test with all behavior changes disabled
         env:
           DLITE_BEHAVIOR: OFF
-        run: |
-          pipenv shell
-          cd build
-
-          ctest || ctest --rerun-failed --output-on-failure -V
+        run: ctest || ctest --rerun-failed --output-on-failure -V
+        working-directory: build
 
       - name: Test with all behavior changes enabled
         env:
           DLITE_BEHAVIOR: ON
-        run: |
-          pipenv shell
-          cd build
-
-          ctest || ctest --rerun-failed --output-on-failure -V
+        run: ctest || ctest --rerun-failed --output-on-failure -V
+        working-directory: build
 
       - name: Build Linux wheel
-        run: |
-          pipenv shell
-
-          python3 -m pip wheel -w dist ./python
+        run: python3 -m pip wheel -w dist ./python
 
       - name: Install python package and test the installation
         run: |
-          pipenv shell
-
           python3 -m pip install --user dist/*.whl
           python3 bindings/python/tests/__main__.py
