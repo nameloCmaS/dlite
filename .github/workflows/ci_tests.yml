@@ -24,7 +24,6 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: build
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -33,7 +32,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Create 'build' folder as default 'working-directory'
+      - name: Create 'build' folder
         run: mkdir build
 
       # TODO: Setup cache
@@ -124,8 +123,8 @@ jobs:
           python3 -m pip --version
           python3 -m pip install --upgrade pip
           python3 -m pip install --user pipenv
-          pipenv uninstall setuptools wheel
-          pipenv install -r requirements.txt -r requirements_full.txt -r requirements_dev.txt
+          python3 -m pip install -U setuptools wheel
+          pipenv install
 
       - name: Check numpy
         run: |
@@ -135,15 +134,17 @@ jobs:
 
       - name: List installed Python packages
         run: |
+          pipenv shell
+
           uname -a
           python --version
-          pipenv lock
 
       - name: Configure
         env:
           DLITE_IMPORTSKIP_EXITCODE: 1
         run: |
           pipenv shell
+          cd build
 
           if [[ ${{ matrix.os }} == macos* ]] ;
           then
@@ -164,6 +165,7 @@ jobs:
       - name: Build
         run: |
           pipenv shell
+          cd build
 
           cmake --build .
 
@@ -175,6 +177,7 @@ jobs:
           DLITE_PYDEBUG: ""
         run: |
           pipenv shell
+          cd build
 
           ctest || ctest --rerun-failed --output-on-failure -V
 
@@ -189,6 +192,7 @@ jobs:
           DLITE_BEHAVIOR: OFF
         run: |
           pipenv shell
+          cd build
 
           ctest || ctest --rerun-failed --output-on-failure -V
 
@@ -197,6 +201,7 @@ jobs:
           DLITE_BEHAVIOR: ON
         run: |
           pipenv shell
+          cd build
 
           ctest || ctest --rerun-failed --output-on-failure -V
 
