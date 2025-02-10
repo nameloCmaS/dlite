@@ -15,7 +15,6 @@ swig = "==4.3.0"
 cmake = "==3.31.4"
 
 [requires]
-python_version = ">=3.8"
 
 [doc]
 importlib-metadata = "==6.8.0"
