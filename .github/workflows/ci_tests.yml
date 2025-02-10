@@ -41,11 +41,22 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: "pipenv"
+        
 
       # Based on: https://github.com/pydata/xarray/blob/main/.github/workflows/ci.yaml
       - name: Set environment variables
         run: |
-          echo "PYTHON_VERSION=${{ matrix.python-version }}" >> $GITHUB_ENV
+          echo "PYTHON_VERSION=${{ matrix.python-version }}" >> "$GITHUB_ENV"
+          # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#example-of-adding-a-system-path
+          # https://packaging.python.org/en/latest/tutorials/managing-dependencies/#installing-pipenv
+          # https://docs.python.org/3/library/sysconfig.html#user-scheme
+          if [[ ${{ matrix.os }} == windows* ]] ;
+          then
+            py_ver_win = ${{ matrix.python-version }} # needs to be decimal place `.` free
+            echo $(python3 -c "import site; from pathlib import Path; print(f\"{Path(site.getuserbase()) / 'Python${py_ver_win//.}' / 'Source'}\")") >> "$GITHUB_PATH"
+          else
+            echo $(python3 -c "import site; from pathlib import Path; print(f\"{Path(site.getuserbase()) / 'bin'}\")") >> "$GITHUB_PATH"
+          fi
 
 
         # We do not install rdflib0-dev here, since we want to  
@@ -110,7 +121,7 @@ jobs:
           python3 --version
           python3 -m pip --version
           python3 -m pip install --upgrade pip
-          python3 -m pip install pipenv
+          python3 -m pip install --user pipenv
           pipenv uninstall setuptools wheel
           pipenv install -r requirements.txt -r requirements_full.txt -r requirements_dev.txt
 
