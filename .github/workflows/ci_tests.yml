@@ -36,7 +36,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: "pip"
+          # cache: "pip"
 
 
       # Based on: https://github.com/pydata/xarray/blob/main/.github/workflows/ci.yaml
@@ -132,10 +132,9 @@ jobs:
         run: |
           if [[ ${{ matrix.os }} != windows* ]] ;
           then
-            unix_env_vars="CFLAGS='-Wno-missing-field-initializers'"
+            export CFLAGS='-Wno-missing-field-initializers'
           fi
 
-          ${unix_env_vars} \
           cmake -B build . \
             -DCMAKE_Fortran_COMPILER=${{ steps.setup-fortran.outputs.fc }} \
             -DFORCE_EXAMPLES=ON \
