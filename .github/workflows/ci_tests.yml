@@ -123,7 +123,6 @@ jobs:
       - name: Configure
         env:
           DLITE_IMPORTSKIP_EXITCODE: 1
-        working-directory: build
         run: |
 
           if [[ ${{ matrix.os }} == macos* ]] ;
