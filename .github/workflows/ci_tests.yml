@@ -24,7 +24,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./build
+        working-directory: build
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -33,6 +33,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Create 'build' folder as default 'working-directory'
+        run: mkdir build
 
       # TODO: Setup cache
       # TODO: Fix Windows tasks
