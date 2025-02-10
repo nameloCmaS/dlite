@@ -53,7 +53,8 @@ jobs:
           # https://docs.python.org/3/library/sysconfig.html#user-scheme
           if [[ ${{ matrix.os }} == windows* ]] ;
           then
-            py_ver_win = ${{ matrix.python-version }} # needs to be decimal place `.` free
+            # Python version needs to be decimal place free i.e. 310 instead of 3.10
+            py_ver_win=${{ matrix.python-version }}
             echo $(python3 -c "import site; from pathlib import Path; print(f\"{Path(site.getuserbase()) / 'Python${py_ver_win//.}' / 'Source'}\")") >> "$GITHUB_PATH"
           else
             echo $(python3 -c "import site; from pathlib import Path; print(f\"{Path(site.getuserbase()) / 'bin'}\")") >> "$GITHUB_PATH"
