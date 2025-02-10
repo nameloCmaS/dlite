@@ -135,6 +135,8 @@ jobs:
             export CFLAGS='-Wno-missing-field-initializers'
           fi
 
+          echo "$PATH"
+
           cmake -B build . \
             -DCMAKE_Fortran_COMPILER=${{ steps.setup-fortran.outputs.fc }} \
             -DFORCE_EXAMPLES=ON \
