@@ -33,6 +33,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Setup Python ${{ matrix.python-version }}
+        id: cache
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
@@ -102,6 +103,7 @@ jobs:
 
 
       - name: Install Python dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           which python3
           python3 --version
@@ -132,14 +134,25 @@ jobs:
             # which can be used for the Windows install also
             MACOS_GFORTRAN="-DCMAKE_Fortran_COMPILER=$(brew --prefix gfortran)/bin/gfortran"
           fi
+          
+          if [[ ${{ matrix.os }} == windows* ]] ;
+          then
+            cmake -B build . \
+              -DFORCE_EXAMPLES=ON \
+              -DWITH_FORTRAN=YES \
+              -DPython3_FIND_STRATEGY=LOCATION \
+              -DPython3_ROOT_DIR=$(python3 -c 'import sys; print(sys.exec_prefix)') \
 
-          CFLAGS='-Wno-missing-field-initializers' \
-          cmake -B build . \
-            -DFORCE_EXAMPLES=ON \
-            -DWITH_FORTRAN=YES \
-            -DPython3_FIND_STRATEGY=LOCATION \
-            -DPython3_ROOT_DIR=$(python3 -c 'import sys; print(sys.exec_prefix)') \
-            ${MACOS_GFORTRAN}
+          else
+            CFLAGS='-Wno-missing-field-initializers' \
+            cmake -B build . \
+              -DFORCE_EXAMPLES=ON \
+              -DWITH_FORTRAN=YES \
+              -DPython3_FIND_STRATEGY=LOCATION \
+              -DPython3_ROOT_DIR=$(python3 -c 'import sys; print(sys.exec_prefix)') \
+              ${MACOS_GFORTRAN}
+
+          fi
 
       - name: Build
         run: cmake --build .
