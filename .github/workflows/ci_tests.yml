@@ -15,7 +15,17 @@ name: CI tests
 # Please remember to update respective plugin docstring if this list changes.
 #
 
-on: [push]
+# TODO: Split jobs from configure, then build, then package, install etc
+# TODO: Windows builds: Native using VS, Native using VS plus Anaconda, MingW, CYGWIN, Cross compiled with MingW on Ubuntu, Cross compiled on ? as 32bit?
+on:
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        required: false
+        default: false
+  push:
 
 jobs:
   build:
@@ -30,6 +40,9 @@ jobs:
         python-version: ["3.10"]
         # python-version: ["3.8", "3.10", "3.13"]
     steps:
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Setup Python ${{ matrix.python-version }}
