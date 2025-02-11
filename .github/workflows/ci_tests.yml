@@ -133,8 +133,8 @@ jobs:
           python --version
           pip freeze
 
-      - name: Setup Windows CLang (MinGW)
-        if: ${{ startsWith(matrix.os, 'macos') }}
+      - name: Setup Windows CMake (MinGW)
+        if: ${{ startsWith(matrix.os, 'windows') }}
         run: |
           pacman -S mingw-w64-x86_64-cmake
       
