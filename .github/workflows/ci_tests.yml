@@ -157,10 +157,10 @@ jobs:
           DLITE_IMPORTSKIP_EXITCODE: 1
           FC: gfortran
         run: |
-          cmake -B build . \
-            -DFORCE_EXAMPLES=ON \
-            -DWITH_FORTRAN=YES \
-            -DPython3_FIND_STRATEGY=LOCATION \
+          cmake -B build . `
+            -DFORCE_EXAMPLES=ON `
+            -DWITH_FORTRAN=YES `
+            -DPython3_FIND_STRATEGY=LOCATION `
             -DPython3_ROOT_DIR=$(python3 -c 'import sys; print(sys.exec_prefix)')
 
  
