@@ -18,7 +18,6 @@ name: CI tests
 # TODO: Split jobs from configure, then build, then package, install etc
 # TODO: Windows builds: Native using VS (MSVCRT & UCRT libraries), Native using VS plus Anaconda, MingW, CYGWIN, Cross compiled with MingW on Ubuntu, Cross compiled on ? as 32bit (i686)?
 on:
-  push:
   workflow_dispatch:
     inputs:
       debug_enabled:
@@ -26,6 +25,7 @@ on:
         description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
         required: false
         default: false
+  push:
 
 jobs:
   build:
@@ -155,7 +155,7 @@ jobs:
           fi
 
           cmake -B build . \
-            -DCMAKE_Fortran_COMPILER=${{ steps.setup-fortran.outputs.fc }} \
+            -DCMAKE_Fortran_COMPILER=gfortran \
             -DFORCE_EXAMPLES=ON \
             -DWITH_FORTRAN=YES \
             -DPython3_FIND_STRATEGY=LOCATION \
