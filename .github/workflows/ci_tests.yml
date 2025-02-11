@@ -135,8 +135,13 @@ jobs:
 
       - name: Setup Windows CMake (MinGW)
         if: ${{ startsWith(matrix.os, 'windows') }}
+        shell: pwsh
         run: |
-          pacman -S mingw-w64-x86_64-cmake
+          $env:PATH = "C:\msys64\bin\;C:\msys64\usr\bin;$env:PATH"
+          echo "C:\msys64\bin\" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          echo "C:\msys64\usr\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+          pacman -S --noconfirm --needed mingw-w64-x86_64-cmake
       
       - name: Setup Fortran
         uses: fortran-lang/setup-fortran@v1
