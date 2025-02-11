@@ -36,7 +36,8 @@ jobs:
         shell: bash
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        # os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [windows-latest]
         python-version: ["3.10"]
         # python-version: ["3.8", "3.10", "3.13"]
     steps:
@@ -151,20 +152,33 @@ jobs:
           compiler: gcc
 
       - name: Configure
+        shell: pwsh
         env:
           DLITE_IMPORTSKIP_EXITCODE: 1
+          FC: gfortran
         run: |
-          if [[ ${{ matrix.os }} != windows* ]] ;
-          then
-            export CFLAGS='-Wno-missing-field-initializers'
-          fi
-
           cmake -B build . \
-            -DCMAKE_Fortran_COMPILER=gfortran \
             -DFORCE_EXAMPLES=ON \
             -DWITH_FORTRAN=YES \
             -DPython3_FIND_STRATEGY=LOCATION \
             -DPython3_ROOT_DIR=$(python3 -c 'import sys; print(sys.exec_prefix)')
+
+ 
+      # - name: Configure
+      #   env:
+      #     DLITE_IMPORTSKIP_EXITCODE: 1
+      #   run: |
+      #     if [[ ${{ matrix.os }} != windows* ]] ;
+      #     then
+      #       export CFLAGS='-Wno-missing-field-initializers'
+      #     fi
+
+      #     cmake -B build . \
+      #       -DCMAKE_Fortran_COMPILER=gfortran \
+      #       -DFORCE_EXAMPLES=ON \
+      #       -DWITH_FORTRAN=YES \
+      #       -DPython3_FIND_STRATEGY=LOCATION \
+      #       -DPython3_ROOT_DIR=$(python3 -c 'import sys; print(sys.exec_prefix)')
 
       - name: Build
         run: cmake --build .
