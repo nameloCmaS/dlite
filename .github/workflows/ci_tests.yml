@@ -16,8 +16,9 @@ name: CI tests
 #
 
 # TODO: Split jobs from configure, then build, then package, install etc
-# TODO: Windows builds: Native using VS, Native using VS plus Anaconda, MingW, CYGWIN, Cross compiled with MingW on Ubuntu, Cross compiled on ? as 32bit?
+# TODO: Windows builds: Native using VS (MSVCRT & UCRT libraries), Native using VS plus Anaconda, MingW, CYGWIN, Cross compiled with MingW on Ubuntu, Cross compiled on ? as 32bit (i686)?
 on:
+  push:
   workflow_dispatch:
     inputs:
       debug_enabled:
@@ -25,7 +26,6 @@ on:
         description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
         required: false
         default: false
-  push:
 
 jobs:
   build:
@@ -133,9 +133,15 @@ jobs:
           python --version
           pip freeze
 
+      - name: Setup Windows CLang (MinGW)
+        if: ${{ startsWith(matrix.os, 'macos') }}
+        run: |
+          pacman -S mingw-w64-x86_64-cmake
+      
       - name: Setup Fortran
         uses: fortran-lang/setup-fortran@v1
         id: setup-fortran
+        if: ${{ startsWith(matrix.os, 'macos') }}
         with:
           compiler: gcc
 
@@ -147,8 +153,6 @@ jobs:
           then
             export CFLAGS='-Wno-missing-field-initializers'
           fi
-
-          echo "$PATH"
 
           cmake -B build . \
             -DCMAKE_Fortran_COMPILER=${{ steps.setup-fortran.outputs.fc }} \
