@@ -51,7 +51,7 @@ void help()
 
 
 /* Update `env` by adding variable `name` and `value` to it.  How it
-   is done is determined by `action`, which ban be either 'Replace',
+   is done is determined by `action`, which can be either 'Replace',
    'Append' or 'Prepend'. */
 char **add_paths(char **env, const char *name, const char *value, Action action)
 {
