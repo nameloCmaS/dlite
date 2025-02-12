@@ -4,6 +4,7 @@
 #include <string.h>
 #include <limits.h>
 
+#include "config.h"
 #include "fileutils.h"
 #include "test_macros.h"
 

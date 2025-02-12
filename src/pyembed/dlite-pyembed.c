@@ -8,7 +8,7 @@
 #include "dlite-python-storage.h"
 #include "dlite-python-mapping.h"
 #include "dlite-python-singletons.h"
-#include "config-paths.h"
+#include "utils/compat-src/setenv.h"
 
 #define GLOBALS_ID "dlite-pyembed-globals"
 
