@@ -6,17 +6,19 @@
  * Distributed under terms of the MIT license.
  */
 
-#include "setenv.h"
-
+#include <stdlib.h>
+#include "utils/compat-src/setenv.h"
 
 /* setenv() - change or add an environment variable */
-#ifndef HAVE_SETENV
-# ifdef HAVE__PUTENV_S
+#if defined(HAVE_SETENV) && defined(HAVE__PUTENV_S)
+
 int setenv(const char *name, const char *value, int overwrite)
 {
   if (overwrite || getenv(name))
-    return _putenv(name, value);
+    return _putenv_s(name, value);
   return 0;
 }
-# endif
+
 #endif
+
+typedef int avoid_empty_translation_unit;
