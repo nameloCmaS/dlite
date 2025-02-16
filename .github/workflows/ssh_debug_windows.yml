@@ -13,8 +13,24 @@ jobs:
     runs-on: windows-latest
     defaults:
       run:
-        shell: bash
+        shell: msys2 {0}
+
     steps:
+      - name: Setup MSYS2
+        id: msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          pacboy: >-
+            cmake:p
+            hdf5:p
+            libxml2:p
+            libxslt:p
+
+        # As per: https://github.com/marketplace/actions/setup-msys2#actionscheckout-and-line-endings
+      - run: git config --global core.autocrlf input
+      
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -23,20 +39,23 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Add to $PATH for MSYS2 & MinGW
-        run: |
-          echo "C:\msys64\usr\bin" >> "$GITHUB_PATH"
-          echo "C:\msys64\usr\local\bin" >> "$GITHUB_PATH"
-          echo "C:\msys64\mingw64\bin" >> "$GITHUB_PATH"
+      # - name: Add to $PATH for MSYS2 & MinGW
+      #   run: |
+      #     echo "C:\msys64\usr\bin" >> "$GITHUB_PATH"
+      #     echo "C:\msys64\usr\local\bin" >> "$GITHUB_PATH"
+      #     echo "C:\msys64\mingw64\bin" >> "$GITHUB_PATH"
+      #     echo "C:\Program Files (x86)\Windows Kits 10 Debuggers\x64" >> "$GITHUB_PATH"
+      #     # PATH="/c/Program Files (x86)/Windows Kits/10/Debuggers/x64:$PATH"
 
-      - name: Install dependencies
-        run: |
-            PACMAN_INSTALL=(
-              mingw-w64-x86_64-libxml2
-              mingw-w64-x86_64-libxslt
-              mingw-w64-x86_64-hdf5
-              )
-            pacman -S --noconfirm ${PACMAN_INSTALL[@]}
+      # - name: Install dependencies
+      #   run: |
+      #       PACMAN_INSTALL=(
+      #         mingw-w64-x86_64-libxml2
+      #         mingw-w64-x86_64-libxslt
+      #         mingw-w64-x86_64-hdf5
+      #         mingw-w64-x86_64-cmake
+      #         )
+      #       pacman -S --noconfirm ${PACMAN_INSTALL[@]}
 
       - name: Install Python dependencies
         run: |
@@ -44,7 +63,7 @@ jobs:
           python3 --version
           python3 -m pip --version
           python3 -m pip install --upgrade pip
-          # python3 -m pip install -U setuptools wheel
+          python3 -m pip install -U setuptools wheel
           python3 -m pip install -r requirements.txt -r requirements_full.txt -r requirements_dev.txt
 
       - name: Check numpy
@@ -60,6 +79,7 @@ jobs:
       - name: Configure
         env:
           DLITE_IMPORTSKIP_EXITCODE: 1
+          CMAKE_LIBRARY_PATH: ${{ steps.msys2.outputs.msys2-location }}
         run: |
           cmake -B build . \
             -DFORCE_EXAMPLES=ON \
@@ -68,6 +88,11 @@ jobs:
             -DPython3_ROOT_DIR=$(python3 -c 'import sys; print(sys.exec_prefix)') \
             -DCMAKE_Fortran_COMPILER=gfortran \
             -G "MinGW Makefiles"
+        # --trace-expand \
+        # --trace-source=cmake/MakePlatformPaths.cmake \
+        # -Wno-dev \
+        # 2>&1 \
+        # | grep dlite_PATH_ESCAPED_NATIVE
 
       - name: Build
         run: cmake --build .
