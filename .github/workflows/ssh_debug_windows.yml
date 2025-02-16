@@ -20,6 +20,7 @@ jobs:
         id: msys2
         uses: msys2/setup-msys2@v2
         with:
+          path-type: inherit
           msystem: MINGW64
           update: true
           pacboy: >-
@@ -27,9 +28,6 @@ jobs:
             hdf5:p
             libxml2:p
             libxslt:p
-
-        # As per: https://github.com/marketplace/actions/setup-msys2#actionscheckout-and-line-endings
-      - run: git config --global core.autocrlf input
       
       - name: Checkout repository
         uses: actions/checkout@v4
