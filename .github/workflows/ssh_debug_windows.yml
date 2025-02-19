@@ -1,0 +1,130 @@
+on:
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        required: false
+        default: true
+
+jobs:
+  debugger:
+    name: Github Windows Debugger
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+      - name: Setup MSYS2
+        id: msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          path-type: inherit
+          msystem: MINGW64
+          update: true
+          pacboy: >-
+            cmake:p
+            hdf5:p
+            libxml2:p
+            libxslt:p
+      
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      # - name: Add to $PATH for MSYS2 & MinGW
+      #   run: |
+      #     echo "C:\msys64\usr\bin" >> "$GITHUB_PATH"
+      #     echo "C:\msys64\usr\local\bin" >> "$GITHUB_PATH"
+      #     echo "C:\msys64\mingw64\bin" >> "$GITHUB_PATH"
+      #     echo "C:\Program Files (x86)\Windows Kits 10 Debuggers\x64" >> "$GITHUB_PATH"
+      #     # PATH="/c/Program Files (x86)/Windows Kits/10/Debuggers/x64:$PATH"
+
+      # - name: Install dependencies
+      #   run: |
+      #       PACMAN_INSTALL=(
+      #         mingw-w64-x86_64-libxml2
+      #         mingw-w64-x86_64-libxslt
+      #         mingw-w64-x86_64-hdf5
+      #         mingw-w64-x86_64-cmake
+      #         )
+      #       pacman -S --noconfirm ${PACMAN_INSTALL[@]}
+
+      - name: Install Python dependencies
+        run: |
+          which python3
+          python3 --version
+          python3 -m pip --version
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -U setuptools wheel
+          python3 -m pip install -r requirements.txt -r requirements_full.txt -r requirements_dev.txt
+
+      - name: Check numpy
+        run: |
+          python3 -c 'import numpy as np; print(np.get_include())'
+
+      - name: List installed Python packages
+        run: |
+          uname -a
+          python --version
+          pip freeze
+
+      - name: Configure
+        env:
+          DLITE_IMPORTSKIP_EXITCODE: 1
+          CMAKE_LIBRARY_PATH: ${{ steps.msys2.outputs.msys2-location }}
+        run: |
+          cmake -B build . \
+            -DFORCE_EXAMPLES=ON \
+            -DWITH_FORTRAN=YES \
+            -DPython3_FIND_STRATEGY=LOCATION \
+            -DPython3_ROOT_DIR=$(python3 -c 'import sys; print(sys.exec_prefix)') \
+            -DCMAKE_Fortran_COMPILER=gfortran \
+            -G "MinGW Makefiles"
+        # --trace-expand \
+        # --trace-source=cmake/MakePlatformPaths.cmake \
+        # -Wno-dev \
+        # 2>&1 \
+        # | grep dlite_PATH_ESCAPED_NATIVE
+
+      - name: Build
+        run: cmake --build .
+        working-directory: build
+
+      - uses: mxschmitt/action-tmate@v3
+        if: failure() || success()
+
+      - name: Install
+        run: cmake --install .
+        working-directory: build
+
+      - name: Test
+        env:
+          DLITE_PYDEBUG: ""
+        run: ctest || ctest --rerun-failed --output-on-failure -V
+        working-directory: build
+
+      - name: Test with all behavior changes disabled
+        env:
+          DLITE_BEHAVIOR: OFF
+        run: ctest || ctest --rerun-failed --output-on-failure -V
+        working-directory: build
+
+      - name: Test with all behavior changes enabled
+        env:
+          DLITE_BEHAVIOR: ON
+        run: ctest || ctest --rerun-failed --output-on-failure -V
+        working-directory: build
+
+      - name: Build wheel
+        run: python3 -m pip wheel -w dist ./python
+
+      - name: Install python package and test the installation
+        run: |
+          python3 -m pip install --user dist/*.whl
+          python3 bindings/python/tests/__main__.py
