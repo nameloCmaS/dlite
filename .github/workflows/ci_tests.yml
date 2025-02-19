@@ -95,7 +95,7 @@ jobs:
               python3-numpy
               python3-yaml
             )
-            sudo apt-get update --fix-missing && \
+            sudo apt-get update --fix-missing
             sudo apt-get install ${APT_INSTALL[@]}
                 
           elif [[ ${{ matrix.os }} == macos* ]] ;

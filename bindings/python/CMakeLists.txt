@@ -104,7 +104,7 @@ else()
 endif()
 
 
-# Python requires .so for compiled extension modules on all Unix platforms. This includes macOS 
+# Python requires .so for compiled extension modules on all Unix platforms. This includes macOS
 # which would usually use .dylib. Thus change on macOS for just this target - the Python extension module.
 # `swig_add_library` changes extension to .pyd for Windows, but does not chnage it for macOS (possible bug).
 if(APPLE)
@@ -276,28 +276,28 @@ add_dependencies(
 # Based on: http://developer.intra2net.com/git/?p=libftdi;a=blob;f=python/CMakeLists.txt;h=93410544fac2a45eec51cb8dd344708b3bbdfe67;hb=HEAD
 install(
   DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dlite
-  DESTINATION "${Python3_SITE}"
+  DESTINATION "${Python3_SITEARCH}"
   USE_SOURCE_PERMISSIONS
   PATTERN ".gitignore" EXCLUDE
   PATTERN "*~" EXCLUDE
 )
 install(
   DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/python-mapping-plugins
-  DESTINATION ${Python3_PREFIX}share/dlite
+  DESTINATION ${DLITE_PKG_ROOT}/share/dlite
   USE_SOURCE_PERMISSIONS
   PATTERN ".gitignore" EXCLUDE
   PATTERN "*~" EXCLUDE
 )
 install(
   DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/python-protocol-plugins
-  DESTINATION ${Python3_PREFIX}share/dlite
+  DESTINATION ${DLITE_PKG_ROOT}/share/dlite
   USE_SOURCE_PERMISSIONS
   PATTERN ".gitignore" EXCLUDE
   PATTERN "*~" EXCLUDE
 )
 install(
   DIRECTORY ${dlite_SOURCE_DIR}/storages/python/python-storage-plugins
-  DESTINATION ${Python3_PREFIX}share/dlite
+  DESTINATION ${DLITE_PKG_ROOT}/share/dlite
   USE_SOURCE_PERMISSIONS
   PATTERN ".gitignore" EXCLUDE
   PATTERN "*.json" EXCLUDE
