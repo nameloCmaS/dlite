@@ -57,7 +57,7 @@ foreach(test ${python-tests})
     )
 
   set_property(TEST ${test} PROPERTY
-    ENVIRONMENT "PATH=${dlite_PATH_NATIVE}")
+    ENVIRONMENT "PATH=${dlite_PATH_NATIVE}${PATHSEP}$ENV{PATH}")
   if (WIN32 AND PYTHON_IS_ANACONDA)
     set_property(TEST ${test} APPEND PROPERTY
       ENVIRONMENT "PYTHONHOME=${Python3_RUNTIME_LIBRARY_DIRS}")

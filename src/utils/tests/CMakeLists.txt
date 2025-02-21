@@ -62,7 +62,7 @@ foreach(test ${tests})
     COMMAND ${RUNNER} ${test}
     )
   set_property(TEST ${test} PROPERTY
-    ENVIRONMENT "PATH=${dlite_PATH_NATIVE}")
+    ENVIRONMENT "PATH=${dlite_PATH_NATIVE}${PATHSEP}$ENV{PATH}")
   if (NOT WIN32)
   set_property(TEST ${test} APPEND PROPERTY
     ENVIRONMENT "LD_LIBRARY_PATH=${dlite_LD_LIBRARY_PATH_NATIVE}")

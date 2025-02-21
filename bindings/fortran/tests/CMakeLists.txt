@@ -69,7 +69,7 @@ foreach(test ${tests})
     )
 
   set_property(TEST ${name} PROPERTY
-    ENVIRONMENT "PATH=${dlite_PATH_NATIVE}")
+    ENVIRONMENT "PATH=${dlite_PATH_NATIVE}${PATHSEP}$ENV{PATH}")
   set_property(TEST ${name} APPEND PROPERTY
     ENVIRONMENT "WINEPATH=${dlite_WINEPATH_NATIVE}")
   set_property(TEST ${name} APPEND PROPERTY
