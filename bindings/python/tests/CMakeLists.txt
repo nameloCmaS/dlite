@@ -44,7 +44,7 @@ foreach(test ${tests})
     )
 
   set_property(TEST ${name} PROPERTY
-    ENVIRONMENT "PATH=${dlite_PATH_NATIVE}${PATHSEP}$ENV{PATH}")
+    ENVIRONMENT "\"PATH=${dlite_PATH_NATIVE}${PATHSEP}$ENV{PATH}\"")
   set_property(TEST ${name} APPEND PROPERTY
     ENVIRONMENT "PYTHONPATH=${dlite_PYTHONPATH_NATIVE}")
   if (UNIX AND NOT APPLE)
