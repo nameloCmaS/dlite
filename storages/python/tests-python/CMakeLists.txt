@@ -57,19 +57,19 @@ foreach(test ${python-tests})
     )
 
   set_property(TEST ${test} PROPERTY
-    ENVIRONMENT "PATH=${dlite_PATH_NATIVE}${PATHSEP}$ENV{PATH}")
+    ENVIRONMENT "\"PATH=${dlite_PATH_NATIVE}${PATHSEP}$ENV{PATH}\"")
   if (WIN32 AND PYTHON_IS_ANACONDA)
     set_property(TEST ${test} APPEND PROPERTY
-      ENVIRONMENT "PYTHONHOME=${Python3_RUNTIME_LIBRARY_DIRS}")
+      ENVIRONMENT "\"PYTHONHOME=${Python3_RUNTIME_LIBRARY_DIRS}\"")
   endif()
   if(MINGW)
     set_property(TEST ${test} APPEND PROPERTY
       ENVIRONMENT "WINEPATH=${dlite_WINEPATH_NATIVE}")
   endif()
   set_property(TEST ${test} APPEND PROPERTY
-    ENVIRONMENT "PYTHONPATH=${dlite_PYTHONPATH_NATIVE}")
+    ENVIRONMENT "\"PYTHONPATH=${dlite_PYTHONPATH_NATIVE}\"")
   set_property(TEST ${test} APPEND PROPERTY
-    ENVIRONMENT "DLITE_STORAGES=${plugindir}/*.json")
+    ENVIRONMENT "\"DLITE_STORAGES=${plugindir}/*.json\"")
   set_property(TEST ${test} APPEND PROPERTY
     ENVIRONMENT "DLITE_PYDEBUG=")
   set_property(TEST ${test} APPEND PROPERTY
