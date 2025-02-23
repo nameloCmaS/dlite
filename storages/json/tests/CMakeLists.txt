@@ -87,6 +87,6 @@ foreach(test ${tests})
   set_property(TEST ${test} APPEND PROPERTY
     ENVIRONMENT "DLITE_USE_BUILD_ROOT=YES")
   set_property(TEST ${test} APPEND PROPERTY
-    ENVIRONMENT "DLITE_STORAGES=$<SHELL_PATH:${dlite-src-tests_SOURCE_DIR}/*.json>")
+    ENVIRONMENT "\"DLITE_STORAGES=$<SHELL_PATH:${dlite-src-tests_SOURCE_DIR}/*.json>\"")
 
 endforeach()
