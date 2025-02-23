@@ -18,7 +18,6 @@
 #           - <var>_UNIX: paths are converted to Unix paths
 #           - <var>_WINDOWS: paths are converted to Windows paths
 #           - <var>_CMAKE: paths are converted to CMake paths
-#           - <var>_SHELL: paths are converted to Shell paths
 #   - MULTI_CONFIG_PATHS: Like `paths_var` but also appends config
 #         directories (specified with CONFIG_DIRS) to the value of
 #         `multipaths_var`.
@@ -56,7 +55,7 @@ function(make_platform_paths)
     set(names "${CMAKE_CONFIGURATION_TYPES}")
   endif()
 
-  set(conversions NATIVE UNIX WINDOWS CMAKE SHELL)
+  set(conversions NATIVE UNIX WINDOWS CMAKE)
 
   # Create new variables for platform-specific paths
   set(vars ${paths_vars} ${multi_paths_vars})
@@ -79,7 +78,6 @@ function(make_platform_paths)
       set(${var}_NATIVE "${${var}_UNIX}")
     endif()
     cmake_path(CONVERT "${${var}_NATIVE}" TO_CMAKE_PATH_LIST ${var}_CMAKE)
-    set(${var}_SHELL $<SHELL_PATH:"${${var}}">)
   endforeach()
 
   # Append config dirs to `multi_paths_vars`
