@@ -62,11 +62,11 @@ function(make_platform_paths)
   foreach(var ${vars})
     list(REMOVE_DUPLICATES ${var})
 
-    list(TRANSFORM "${var}" REPLACE "^([a-zA-Z]):[/\\]" "/${CMAKE_MATCH_1}/" OUTPUT_VARIABLE ${var}_UNIX) # C:\other/sub -> /C/other/sub
+    list(TRANSFORM "${var}" REPLACE "^([a-zA-Z]):[/\\]" "/\\1/" OUTPUT_VARIABLE ${var}_UNIX) # C:\other/sub -> /C/other/sub
     string(REPLACE "\\" "/" ${var}_UNIX "${${var}_UNIX}")
     string(REPLACE ";" ":" ${var}_UNIX "${${var}_UNIX}")
 
-    list(TRANSFORM "${var}" REPLACE "^/([a-zA-Z])/" "\\${CMAKE_MATCH_1}:\\\\" OUTPUT_VARIABLE ${var}_WINDOWS) # /C/other/sub -> C:\other/sub
+    list(TRANSFORM "${var}" REPLACE "^/([a-zA-Z])/" "\\1:\\\\" OUTPUT_VARIABLE ${var}_WINDOWS) # /C/other/sub -> C:\other/sub
     string(REPLACE "/" "${win_dirsep}" ${var}_WINDOWS "${${var}_WINDOWS}")
 
     # If compiling using Windows, could be using bash or other Unix shells or generators which would want native Unix paths
