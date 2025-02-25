@@ -97,6 +97,6 @@ foreach(test ${tests})
 
   # Needed by test_mapping
   set_property(TEST ${test} APPEND PROPERTY
-    ENVIRONMENT "\"DLITE_MAPPING_PLUGIN_DIRS=$<SHELL_PATH:$<TARGET_FILE_DIR:mapA>>\"")
+    ENVIRONMENT "DLITE_MAPPING_PLUGIN_DIRS=$<SHELL_PATH:$<TARGET_FILE_DIR:mapA>>")
 
 endforeach()
