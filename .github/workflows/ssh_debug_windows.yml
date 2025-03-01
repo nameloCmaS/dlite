@@ -25,6 +25,8 @@ jobs:
           release: false
           path-type: inherit
           pacboy: >-
+            gcc:p
+            python-pip:p
             cmake:p
             hdf5:p
             libxml2:p
@@ -33,10 +35,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python 3.10
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
+      # - name: Setup Python 3.10
+      #   uses: actions/setup-python@v5
+      #   with:
+      #     python-version: "3.10"
 
       # - name: Add to $PATH for MSYS2 & MinGW
       #   run: |
@@ -70,6 +72,8 @@ jobs:
           python3 -m pip install --upgrade pip
           python3 -m pip install -U setuptools wheel
           python3 -m pip install -r requirements.txt -r requirements_full.txt -r requirements_dev.txt
+          python3 -m pip install -U cmake
+
 
       - name: Check numpy
         run: |
