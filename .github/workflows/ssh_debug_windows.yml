@@ -21,12 +21,15 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: MINGW64
-          update: false
+          update: true
           release: false
           path-type: inherit
           pacboy: >-
             gcc:p
+            python:p
             python-pip:p
+            python-pandas:p
+            python-numexpr:p
             cmake:p
             hdf5:p
             libxml2:p
@@ -68,10 +71,16 @@ jobs:
         run: |
           which python3
           python3 --version
+          # curl --output-dir $TEMP -O https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-python-pandas-2.2.1-1-any.pkg.tar.zst
+          # pacman -U --noconfirm $TEMP/mingw-w64-x86_64-python-pandas-2.2.1-1-any.pkg.tar.zst
+          # --system-site-packages allows the venv to use pacman installed packages which won't compile on MinGW without patching
+          python3 -m venv --system-site-packages venv
+          # PATH=$PWD/venv/bin:$PATH
           python3 -m pip --version
           python3 -m pip install --upgrade pip
           python3 -m pip install -U setuptools wheel
-          python3 -m pip install -r requirements.txt -r requirements_full.txt -r requirements_dev.txt
+          # python3 -m pip install -r requirements.txt -r requirements_full.txt -r requirements_dev.txt
+          python3 -m pip install -r requirements_full.txt -r requirements_dev.txt
           python3 -m pip install -U cmake
 
 
