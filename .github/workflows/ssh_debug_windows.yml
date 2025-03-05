@@ -34,6 +34,7 @@ jobs:
             python-numexpr:p
             python-cffi:p
             python-argon2-cffi-bindings:p
+            python-cryptography:p
             cmake:p
             hdf5:p
             libxml2:p
