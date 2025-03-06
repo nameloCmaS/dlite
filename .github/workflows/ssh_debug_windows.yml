@@ -58,12 +58,12 @@ jobs:
       #     echo "C:\msys64\mingw64\bin" >> "$GITHUB_PATH"
       #     echo "C:\Program Files (x86)\Windows Kits 10 Debuggers\x64" >> "$GITHUB_PATH"
       # 
-# # Debug .dll loaders
-PATH="/c/Program Files (x86)/Windows Kits/10/Debuggers/x64:$PATH"
-cd src/utils/tests
-_EXE=test_err.exe
-gflags -i $_EXE +sls
-cdb -c "g;q" $_EXE
+# # # Debug .dll loaders
+# PATH="/c/Program Files (x86)/Windows Kits/10/Debuggers/x64:$PATH"
+# cd src/utils/tests
+# _EXE=test_err.exe
+# gflags -i $_EXE +sls
+# cdb -c "g;q" $_EXE
 
       # - name: Install dependencies
       #   run: |
