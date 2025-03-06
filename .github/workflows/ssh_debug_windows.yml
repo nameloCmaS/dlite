@@ -25,17 +25,22 @@ jobs:
           release: false
           path-type: inherit
           pacboy: >-
-            gcc:p
             python:p
             python-pip:p
-            python-pyarrow:p
-            python-pandas:p
-            python-pydantic-core:p
-            python-numexpr:p
+            python-argon2_cffi:p
+            # python-argon2-cffi-bindings:p
             python-cffi:p
-            python-argon2-cffi-bindings:p
             python-cryptography:p
+            python-numexpr:p
+            python-pandas:p
+            python-pyarrow:p
+            python-pydantic-core:p
+            python-redis:p
+            python-rdflib:p
+            python-yaml:p
+
             cmake:p
+            gcc:p
             hdf5:p
             libxml2:p
             libxslt:p
@@ -99,19 +104,22 @@ jobs:
 
       - name: Check numpy
         run: |
+          source venv/bin/activate
           python3 -c 'import numpy as np; print(np.get_include())'
 
       - name: List installed Python packages
         run: |
+          source venv/bin/activate
           uname -a
           python --version
-          pip freeze
+          pip3 freeze
 
       - name: Configure
         env:
           DLITE_IMPORTSKIP_EXITCODE: 1
           CMAKE_LIBRARY_PATH: ${{ steps.msys2.outputs.msys2-location }}
         run: |
+          source venv/bin/activate
           cmake -B build . \
             -DFORCE_EXAMPLES=ON \
             -DWITH_FORTRAN=YES \
@@ -126,38 +134,51 @@ jobs:
         # | grep dlite_PATH_ESCAPED_NATIVE
 
       - name: Build
-        run: cmake --build .
+        run: |
+          source venv/bin/activate
+          cmake --build .
         working-directory: build
 
       - uses: mxschmitt/action-tmate@v3
         if: failure() || success()
 
       - name: Install
-        run: cmake --install .
+        run: |
+          source venv/bin/activate
+          cmake --install .
         working-directory: build
 
       - name: Test
         env:
           DLITE_PYDEBUG: ""
-        run: ctest || ctest --rerun-failed --output-on-failure -V
+        run: |
+          source venv/bin/activate
+          ctest || ctest --rerun-failed --output-on-failure -V
         working-directory: build
 
       - name: Test with all behavior changes disabled
         env:
           DLITE_BEHAVIOR: OFF
-        run: ctest || ctest --rerun-failed --output-on-failure -V
+        run: |
+          source venv/bin/activate
+          ctest || ctest --rerun-failed --output-on-failure -V
         working-directory: build
 
       - name: Test with all behavior changes enabled
         env:
           DLITE_BEHAVIOR: ON
-        run: ctest || ctest --rerun-failed --output-on-failure -V
+        run: |
+          source venv/bin/activate
+          ctest || ctest --rerun-failed --output-on-failure -V
         working-directory: build
 
       - name: Build wheel
-        run: python3 -m pip wheel -w dist ./python
+        run: |
+          source venv/bin/activate
+          python3 -m pip wheel -w dist ./python
 
       - name: Install python package and test the installation
         run: |
+          source venv/bin/activate
           python3 -m pip install --user dist/*.whl
           python3 bindings/python/tests/__main__.py
