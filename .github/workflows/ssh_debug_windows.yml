@@ -31,9 +31,11 @@ jobs:
             python-cffi:p
             python-cryptography:p
             python-numexpr:p
+            python-numpy:p
             python-pandas:p
             python-pyarrow:p
             python-pydantic-core:p
+            python-pynacl:p
             python-redis:p
             python-rdflib:p
             python-yaml:p
@@ -92,8 +94,7 @@ jobs:
           python3 -m pip install -U setuptools wheel
 
           # requirements.txt is omitted as only contains numpy.
-          # This needs to be installed by pacman and is installed
-          # as a dependancy of the pacboy 'python-pandas' package
+          # This needs to be and is installed by pacman.
           python3 -m pip install -r requirements_full.txt -r requirements_dev.txt
 
           # Use MinGW cmake instead
