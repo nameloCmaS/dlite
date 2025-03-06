@@ -28,7 +28,6 @@ jobs:
             python:p
             python-pip:p
             python-argon2_cffi:p
-            # python-argon2-cffi-bindings:p
             python-cffi:p
             python-cryptography:p
             python-numexpr:p
@@ -38,7 +37,6 @@ jobs:
             python-redis:p
             python-rdflib:p
             python-yaml:p
-
             cmake:p
             gcc:p
             hdf5:p
@@ -61,11 +59,11 @@ jobs:
       #     echo "C:\Program Files (x86)\Windows Kits 10 Debuggers\x64" >> "$GITHUB_PATH"
       # 
 # # Debug .dll loaders
-# PATH="/c/Program Files (x86)/Windows Kits/10/Debuggers/x64:$PATH"
-# cd src/utils/tests
-# _EXE=test_err.exe
-# gflags -i $_EXE +sls
-# cdb -c "g;q" $_EXE
+PATH="/c/Program Files (x86)/Windows Kits/10/Debuggers/x64:$PATH"
+cd src/utils/tests
+_EXE=test_err.exe
+gflags -i $_EXE +sls
+cdb -c "g;q" $_EXE
 
       # - name: Install dependencies
       #   run: |
