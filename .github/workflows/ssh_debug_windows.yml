@@ -140,11 +140,11 @@ jobs:
         working-directory: build
 
       - uses: mxschmitt/action-tmate@v3
-        if: failure() || success()
+        if: failure()
 
       - name: Install
         run: |
-          source venv/bin/activate
+          source ../venv/bin/activate
           cmake --install .
         working-directory: build
 
