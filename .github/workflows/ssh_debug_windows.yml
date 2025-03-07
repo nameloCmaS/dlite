@@ -135,7 +135,7 @@ jobs:
 
       - name: Build
         run: |
-          source venv/bin/activate
+          source ../venv/bin/activate
           cmake --build .
         working-directory: build
 
@@ -152,7 +152,7 @@ jobs:
         env:
           DLITE_PYDEBUG: ""
         run: |
-          source venv/bin/activate
+          source ../venv/bin/activate
           ctest || ctest --rerun-failed --output-on-failure -V
         working-directory: build
 
@@ -160,7 +160,7 @@ jobs:
         env:
           DLITE_BEHAVIOR: OFF
         run: |
-          source venv/bin/activate
+          source ../venv/bin/activate
           ctest || ctest --rerun-failed --output-on-failure -V
         working-directory: build
 
@@ -168,7 +168,7 @@ jobs:
         env:
           DLITE_BEHAVIOR: ON
         run: |
-          source venv/bin/activate
+          source ../venv/bin/activate
           ctest || ctest --rerun-failed --output-on-failure -V
         working-directory: build
 
