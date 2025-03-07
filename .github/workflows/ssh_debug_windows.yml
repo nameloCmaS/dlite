@@ -28,6 +28,7 @@ jobs:
             python:p
             python-pip:p
             python-argon2_cffi:p
+            python-bcrypt:p
             python-cffi:p
             python-cryptography:p
             python-numexpr:p
