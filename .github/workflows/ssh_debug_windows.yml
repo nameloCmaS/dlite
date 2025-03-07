@@ -99,7 +99,7 @@ jobs:
           python3 -m pip install -r requirements_full.txt -r requirements_dev.txt
 
           # Use MinGW cmake instead
-          python3 -m pip install -U cmake
+          python3 -m pip uninstall cmake
 
 
       - name: Check numpy
