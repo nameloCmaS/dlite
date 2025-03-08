@@ -50,5 +50,5 @@ set_property(TEST dlite-example-3 APPEND PROPERTY
   ENVIRONMENT "LD_LIBRARY_PATH=${DLITE_ROOT}/lib")
 elseif(WIN32)
 set_property(TEST dlite-example-3 APPEND PROPERTY
-  ENVIRONMENT "\"PATH=${DLITE_ROOT}/lib${PATHSEP}$ENV{PATH}\"")
+  ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${DLITE_ROOT}/lib")
 endif()
