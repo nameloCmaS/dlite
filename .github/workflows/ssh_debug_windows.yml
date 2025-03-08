@@ -139,9 +139,6 @@ jobs:
           cmake --build .
         working-directory: build
 
-      - uses: mxschmitt/action-tmate@v3
-        if: failure()
-
       - name: Install
         run: |
           source ../venv/bin/activate
@@ -155,6 +152,9 @@ jobs:
           source ../venv/bin/activate
           ctest || ctest --rerun-failed --output-on-failure -V
         working-directory: build
+
+      - uses: mxschmitt/action-tmate@v3
+        if: failure()
 
       - name: Test with all behavior changes disabled
         env:
