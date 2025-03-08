@@ -69,7 +69,7 @@ foreach(test ${tests})
     )
 
   set_property(TEST ${name} PROPERTY
-    ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${dlite_PATH_NATIVE}")
+    ENVIRONMENT_MODIFICATION "PATH=cmake_list_prepend:${dlite_PATH_NATIVE}")
   set_property(TEST ${name} APPEND PROPERTY
     ENVIRONMENT "WINEPATH=${dlite_WINEPATH_NATIVE}")
   set_property(TEST ${name} APPEND PROPERTY
