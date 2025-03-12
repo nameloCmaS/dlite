@@ -87,6 +87,12 @@ MU_TEST(test_get_address)
 MU_TEST(test_get_instance)
 {
   const char *id = "http://onto-ns.com/meta/0.3/EntitySchema";
+
+  // DEBUG
+  PyObject_Print(PySys_GetObject("path"), stdout, 0);
+  PyObject_Print(PySys_GetObject("prefix"), stdout, 0);
+  PyObject_Print(PySys_GetObject("exec_prefix"), stdout, 0);
+
   PyObject *instance = dlite_pyembed_from_instance(id);
   mu_check(instance);
   printf("\nPython instance: ");

@@ -195,7 +195,10 @@ void dlite_pyembed_initialise(void)
         In DLite, we switch to the new Python Initialisation
         Configuration from Python 3.11.
       */
-      PyObject *sys=NULL, *sys_path=NULL, *path=NULL;
+      PyObject *sys=NULL, *sys_path=NULL, *path=NULL
+      // ;
+      // DEBUG
+      , *sysconfig=NULL, *sysconfig_dict=NULL;
 #if PY_VERSION_HEX >= 0x030b0000  /* Python >= 3.11 */
       /* New Python Initialisation Configuration */
       PyStatus status;
@@ -248,6 +251,22 @@ void dlite_pyembed_initialise(void)
           FAIL("cannot access sys.path");
         if (!PyList_Check(sys_path))
           FAIL("sys.path is not a list");
+
+        // DEBUG
+        PyObject_Print(PySys_GetObject("path"), stdout, 0);
+
+        if (!(sysconfig = PyImport_ImportModule("sysconfig")))
+          FAIL("cannot import sysconfig");
+        if (!(sysconfig_dict = PyObject_GenericGetDict(sysconfig, NULL)))
+          FAIL("cannot access sysconfig.__dict__");
+        if (!PyDict_Check(sysconfig_dict))
+          FAIL("sysconfig_dict.__dict__ is not a dict");
+
+
+        PyObject_Print(sysconfig_dict, stdout, 0);
+
+        
+
         if (!(path = PyUnicode_FromString(dlite_PYTHONPATH)))
           FAIL("cannot create python object for dlite_PYTHONPATH");
         if (PyList_Insert(sys_path, 0, path))
