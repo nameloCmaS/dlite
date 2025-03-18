@@ -88,6 +88,13 @@ jobs:
           # on MinGW without patching
           python3 -m venv --system-site-packages venv
           source venv/bin/activate
+          # due to the way packages are installed in both
+          # the base MinGW Python install for compiled packages
+          # and the remaining platform independant packages are
+          # installed to the venv, the paths Python uses get mixed
+          # up, so we give a hint with the below env var.
+          # a ._pth file may work instead
+          echo "PYTHONEXECUTABLE=$VIRTUAL_ENV/bin" >> $GITHUB_ENV
 
           python3 -m pip install --upgrade pip
           python3 -m pip --version
