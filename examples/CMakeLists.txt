@@ -102,7 +102,7 @@ if(FORCE_EXAMPLES OR EXISTS ${CMAKE_INSTALL_PREFIX}/share/dlite/examples)
           ${CMAKE_CURRENT_SOURCE_DIR}/${name}/main.py
       )
     set_property(TEST ${name} PROPERTY
-      ENVIRONMENT_MODIFICATION "PATH=cmake_list_prepend:${dlite_PATH_NATIVE}")
+      ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:$<JOIN:${dlite_PATH_NATIVE},\\\;>")
     set_property(TEST ${name} APPEND PROPERTY
       ENVIRONMENT "PYTHONPATH=${dlite_PYTHONPATH_NATIVE}")
     set_property(TEST ${name} APPEND PROPERTY

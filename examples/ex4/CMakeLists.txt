@@ -66,5 +66,5 @@ set_property(TEST dlite-example-4 APPEND PROPERTY
   ENVIRONMENT "LD_LIBRARY_PATH=${DLITE_ROOT}/lib")
 elseif(WIN32)
 set_property(TEST dlite-example-4 APPEND PROPERTY
-  ENVIRONMENT_MODIFICATION "PATH=cmake_list_prepend:${DLITE_ROOT}/lib")
+  ENVIRONMENT_MODIFICATION "path_list_prepend:$<JOIN:${DLITE_ROOT}/lib,\\\;>")
 endif()
