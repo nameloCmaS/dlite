@@ -4,7 +4,7 @@ import dlite
 from dlite.testutils import importskip
 
 importskip("pandas")
-importskip("tables")
+# importskip("tables")
 importskip("yaml")
 
 
