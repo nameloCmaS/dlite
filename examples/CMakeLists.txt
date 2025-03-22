@@ -17,7 +17,7 @@ endif()
 
 if(MINGW)
   list(APPEND CMAKE_MODULE_PATH "${dlite_SOURCE_DIR}/cmake")
-  list(REMOVE_DUPLICATES CMAKE_MODULE_PATH)¶
+  list(REMOVE_DUPLICATES CMAKE_MODULE_PATH)
 endif()
 
 # CMake toolchain option
