@@ -465,7 +465,7 @@ install(
   FILES
     compat-src/dirent.h
     compat-src/getopt.h
-  DESTINATION include/dlite/utils/compat
+  DESTINATION include/dlite/utils/compat-src
   )
 
 
