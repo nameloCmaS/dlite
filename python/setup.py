@@ -35,7 +35,7 @@ if platform.system() in ["Linux", "Darwin"]:
         "-DALLOW_WARNINGS=ON",
         "-Ddlite_PYTHON_BUILD_REDISTRIBUTABLE_PACKAGE=YES",
         # Will always have CMake version >= 3.14 (see `CMakeLists.txt`)
-        "-DPython3_FIND_VIRTUALENV=ONLY",
+        "-DPython3_FIND_VIRTUALENV=FIRST",
         "-DPython3_FIND_IMPLEMENTATIONS=CPython",
 
         f"-DPython3_EXECUTABLE={sys.executable}",
@@ -57,7 +57,7 @@ elif platform.system() == "Windows":
         f"-DPYTHON_VERSION={v.major}.{v.minor}",
         "-Ddlite_PYTHON_BUILD_REDISTRIBUTABLE_PACKAGE=YES",
         f"-DCMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE={arch}",
-        "-DPython3_FIND_VIRTUALENV=STANDARD",
+        "-DPython3_FIND_VIRTUALENV=FIRST",
     ]
 else:
     raise NotImplementedError(f"Unsupported platform: {platform.system()}")
