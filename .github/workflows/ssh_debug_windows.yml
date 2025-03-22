@@ -27,22 +27,17 @@ jobs:
           pacboy: >-
             python:p
             python-pip:p
-            python-argon2_cffi:p
-            python-bcrypt:p
-            python-cffi:p
-            python-cryptography:p
-            python-numexpr:p
             python-numpy:p
             python-pandas:p
+            python-paramiko:p
             python-pyarrow:p
             python-pydantic-core:p
-            python-pynacl:p
-            python-redis:p
             python-rdflib:p
             python-yaml:p
             cmake:p
             gcc:p
             hdf5:p
+            swig:p
             libxml2:p
             libxslt:p
 
@@ -88,13 +83,19 @@ jobs:
           # on MinGW without patching
           python3 -m venv --system-site-packages venv
           source venv/bin/activate
+          
           # due to the way packages are installed in both
           # the base MinGW Python install for compiled packages
           # and the remaining platform independant packages are
           # installed to the venv, the paths Python uses get mixed
           # up, so we give a hint with the below env var.
-          # a ._pth file may work instead
-          echo "PYTHONEXECUTABLE=$VIRTUAL_ENV/bin" >> $GITHUB_ENV
+          # a ._pth file may work instead. The env var
+          # __PYVENV_LAUNCHER__ should also work (and is better documented).
+          echo "PYTHONEXECUTABLE=$VIRTUAL_ENV/bin/python3.exe" >> $GITHUB_ENV
+
+          # Need to ensure utf-8 mode on Windows
+          echo "PYTHONIOENCODING=utf-8" >> $GITHUB_ENV
+          echo "PYTHONUTF8=1" >> $GITHUB_ENV
 
           python3 -m pip install --upgrade pip
           python3 -m pip --version
@@ -105,8 +106,8 @@ jobs:
           # This needs to be and is installed by pacman.
           python3 -m pip install -r requirements_full.txt -r requirements_dev.txt
 
-          # Use MinGW cmake instead
-          python3 -m pip uninstall --yes cmake
+          # Use MinGW cmake and swig instead
+          python3 -m pip uninstall --yes cmake swig
 
 
       - name: Check numpy
@@ -129,7 +130,7 @@ jobs:
           source venv/bin/activate
           cmake -B build . \
             -DFORCE_EXAMPLES=ON \
-            -DWITH_FORTRAN=YES \
+            -DWITH_FORTRAN=NO \
             -DPython3_FIND_STRATEGY=LOCATION \
             -DPython3_ROOT_DIR=$(python3 -c 'import sys; print(sys.exec_prefix)') \
             -DCMAKE_Fortran_COMPILER=gfortran \
