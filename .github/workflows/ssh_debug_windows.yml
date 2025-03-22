@@ -26,10 +26,11 @@ jobs:
           path-type: inherit
           pacboy: >-
             python:p
-            python-pip:p
+            python-cffi:p
             python-numpy:p
             python-pandas:p
             python-paramiko:p
+            python-pip:p
             python-pyarrow:p
             python-pydantic-core:p
             python-rdflib:p
