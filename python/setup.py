@@ -62,7 +62,6 @@ elif is_mingw:
         "-Ddlite_PYTHON_BUILD_REDISTRIBUTABLE_PACKAGE=YES",
         "-DPython3_FIND_STRATEGY=LOCATION",
         f"-DPython3_ROOT_DIR={sys.exec_prefix}",
-        f"-DCMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE={arch}",
     ]
 elif platform.system() == "Windows":
     dlite_compiled_ext = "_dlite.pyd"
