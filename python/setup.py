@@ -56,7 +56,6 @@ elif is_mingw:
     v = sys.version_info
     CMAKE_ARGS = [
         "-G", "MinGW Makefiles",
-        "-A", "x64",
         "-DWITH_DOC=OFF",
         "-DWITH_HDF5=OFF",
         "-Ddlite_PYTHON_BUILD_REDISTRIBUTABLE_PACKAGE=YES",
