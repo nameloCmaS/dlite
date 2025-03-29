@@ -5,6 +5,7 @@ import re
 import shutil
 import site
 import subprocess
+import sysconfig
 from glob import glob
 from typing import TYPE_CHECKING
 from pathlib import Path
@@ -25,6 +26,11 @@ if TYPE_CHECKING:
 SETUP_DIR = Path(__file__).resolve().parent
 SOURCE_DIR = SETUP_DIR.parent
 
+
+# As per https://www.msys2.org/docs/python/#portability
+is_mingw = os.name == "nt" and sysconfig.get_platform().startswith("mingw")
+
+
 # Set platform-specific CMAKE_ARGS
 if platform.system() in ["Linux", "Darwin"]:
     dlite_compiled_ext = "_dlite.so"
@@ -42,6 +48,22 @@ if platform.system() in ["Linux", "Darwin"]:
         "-DCMAKE_INSTALL_PREFIX="
         f"{site.USER_BASE if '--user' in sys.argv else sys.prefix}",
 
+    ]
+elif is_mingw:
+    dlite_compiled_ext = "_dlite.pyd"
+    dlite_compiled_dll_suffix = "*.dll"
+    is_64bits = sys.maxsize > 2**32
+    arch = 'x64' if is_64bits else 'x86'
+    v = sys.version_info
+    CMAKE_ARGS = [
+        "-G", "MinGW Makefiles",
+        "-A", "x64",
+        "-DWITH_DOC=OFF",
+        "-DWITH_HDF5=OFF",
+        "-Ddlite_PYTHON_BUILD_REDISTRIBUTABLE_PACKAGE=YES",
+        "-DPython3_FIND_STRATEGY=LOCATION",
+        f"-DPython3_ROOT_DIR={sys.exec_prefix}",
+        f"-DCMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE={arch}",
     ]
 elif platform.system() == "Windows":
     dlite_compiled_ext = "_dlite.pyd"
