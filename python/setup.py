@@ -40,7 +40,6 @@ if platform.system() in ["Linux", "Darwin"]:
         "-DWITH_HDF5=OFF",
         "-DALLOW_WARNINGS=ON",
         "-Ddlite_PYTHON_BUILD_REDISTRIBUTABLE_PACKAGE=YES",
-        # Will always have CMake version >= 3.14 (see `CMakeLists.txt`)
         "-DPython3_FIND_VIRTUALENV=FIRST",
         "-DPython3_FIND_IMPLEMENTATIONS=CPython",
 
