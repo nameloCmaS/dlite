@@ -159,9 +159,6 @@ jobs:
           # Prints a warning if enabled but file is not an archive - but does not fail.
           extract: true
 
-      - uses: mxschmitt/action-tmate@v3
-        if: failure()
-
       - name: Configure
         env:
           DLITE_IMPORTSKIP_EXITCODE: 1
@@ -169,17 +166,21 @@ jobs:
         run: |
           CMAKE_INCLUDE_PATH='$GITHUB_WORKSPACE'
           cmake -B build . \
+            -G "Visual Studio 17 2022" \
             -DFORCE_EXAMPLES=ON \
             -DWITH_FORTRAN=YES \
             -DPython3_FIND_STRATEGY=LOCATION \
             -DPython3_ROOT_DIR=$(python3 -c 'import sys; print(sys.exec_prefix)') \
-            -T fortran=ifx
-        # -DCMAKE_Fortran_COMPILER=$(which $FC) 
+            -T fortran=ifx \
+            -DCMAKE_Fortran_COMPILER=$(which $FC)
         # --trace-expand \
         # --trace-source=cmake/MakePlatformPaths.cmake \
         # -Wno-dev \
         # 2>&1 \
         # | grep dlite_PATH_ESCAPED_NATIVE
+
+      - uses: mxschmitt/action-tmate@v3
+        if: failure()
 
       - name: Build
         run: |
