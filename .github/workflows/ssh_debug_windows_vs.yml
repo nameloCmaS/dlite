@@ -173,7 +173,8 @@ jobs:
             -DWITH_FORTRAN=YES \
             -DPython3_FIND_STRATEGY=LOCATION \
             -DPython3_ROOT_DIR=$(python3 -c 'import sys; print(sys.exec_prefix)') \
-            -DCMAKE_Fortran_COMPILER=$FC
+            -T fortran=ifx
+        # -DCMAKE_Fortran_COMPILER=$(which $FC) 
         # --trace-expand \
         # --trace-source=cmake/MakePlatformPaths.cmake \
         # -Wno-dev \
