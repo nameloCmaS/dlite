@@ -138,10 +138,6 @@ jobs:
           # The default value is 'false'
           latest: true
 
-          # A flag to download from prerelease. It should be combined with latest flag.
-          # The default value is 'false'
-          preRelease: true
-
           # The name of the file to download.
           # Use this field only to specify filenames other than tarball or zipball, if any.
           # Supports wildcard pattern (eg: '*', '*.deb', '*.zip' etc..)
