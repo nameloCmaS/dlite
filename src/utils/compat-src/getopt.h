@@ -11,7 +11,10 @@
 extern "C" {
 #endif // __cplusplus
 
-#ifdef HAVE_GETOPT
+#include "utils/config.h"
+
+#if defined(HAVE_GETOPT) && defined(HAVE_GETOPT_LONG)
+#include <unistd.h>
 #include <getopt.h>
 #else
 #ifndef _GETOPT_H_
@@ -43,7 +46,7 @@ extern "C" {
             const struct option* longopts, int* longindex);
 ****************************************************************************/
 
-#endif  /* HAVE_GETOPT */
+#endif  /* defined(HAVE_GETOPT) && defined(HAVE_GETOPT_LONG) */
 
 #ifdef __cplusplus
 }
