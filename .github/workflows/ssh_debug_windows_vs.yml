@@ -103,14 +103,14 @@ jobs:
           pip3 freeze
 
       - name: Setup Fortran
-        uses: fortran-lang/setup-fortran@v1
+        uses: nameloCmaS/setup-fortran@v1
         id: setup-fortran
         with:
           compiler: intel
-      - name: Install Fortran Visual Studio Integration
-        shell: cmd
-        run: |
-          %TEMP%\webimage_extracted\bootstrapper.exe -s --action install --components=%2 --eula=accept -p=NEED_VS2017_INTEGRATION=0 -p=NEED_VS2019_INTEGRATION=0 -p=NEED_VS2022_INTEGRATION=1 --log-dir=%TEMP%
+      # - name: Install Fortran Visual Studio Integration
+      #   shell: cmd
+      #   run: |
+      #     %TEMP%\webimage_extracted\bootstrapper.exe -s --action install --components=%2 --eula=accept -p=NEED_VS2017_INTEGRATION=0 -p=NEED_VS2019_INTEGRATION=0 -p=NEED_VS2022_INTEGRATION=1 --log-dir=%TEMP%
 
       # We do not install rdflib0-dev here, since we want to  
       # DLite both with and without rdflib (Redland) support and the
