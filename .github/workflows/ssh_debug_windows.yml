@@ -1,4 +1,4 @@
-name: CI tests
+name: CI Windows MinGW
 
 on:
   workflow_dispatch:
