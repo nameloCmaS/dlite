@@ -1,3 +1,5 @@
+name: CI tests
+
 on:
   workflow_dispatch:
     inputs:
@@ -5,11 +7,12 @@ on:
         type: boolean
         description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
         required: false
-        default: true
+        default: false
+  push:
 
 jobs:
-  debugger:
-    name: Github Windows Debugger
+  build:
+    name: Github Windows MinGW64
     runs-on: windows-latest
     defaults:
       run:
@@ -107,10 +110,10 @@ jobs:
 
           # requirements.txt is omitted as only contains numpy.
           # This needs to be and is installed by pacman.
-          python3 -m pip install -r requirements_full.txt -r requirements_dev.txt
+          python3 -m pip install -r requirements_full.txt
 
-          # Use MinGW cmake and swig instead
-          python3 -m pip uninstall --yes cmake swig
+          # Note: Uses MinGW versions of dev tools for building
+          # instead: cmake and swig. Thus requirements_dev.txt is not used.
 
 
       - name: Check numpy
@@ -164,9 +167,6 @@ jobs:
           ctest || ctest --rerun-failed --output-on-failure -V
         working-directory: build
 
-      - uses: mxschmitt/action-tmate@v3
-        if: failure()
-
       - name: Test with all behavior changes disabled
         env:
           DLITE_BEHAVIOR: OFF
@@ -193,3 +193,6 @@ jobs:
           source venv/bin/activate
           python3 -m pip install --user dist/*.whl
           python3 bindings/python/tests/__main__.py
+
+      - uses: mxschmitt/action-tmate@v3
+        if: failure()
