@@ -347,7 +347,7 @@ set(sources
   uuid.c
   uuid4.c
   )
-if(NOT HAVE_GETOPT)
+if(NOT HAVE_GETOPT AND NOT HAVE_GETOPT_LONG)
   list(APPEND sources compat-src/getopt.c)
 endif()
 if(WITH_SNPRINTF)
