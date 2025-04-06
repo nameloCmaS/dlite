@@ -103,10 +103,14 @@ jobs:
           pip3 freeze
 
       - name: Setup Fortran
-        uses: nameloCmaS/setup-fortran@v1
+        uses: fortran-lang/setup-fortran@v1
         id: setup-fortran
         with:
           compiler: intel
+      - name: Install Fortran Visual Studio Integration
+        shell: cmd
+        run: |
+          %TEMP%\webimage_extracted\bootstrapper.exe -s --action install --components=%2 --eula=accept -p=NEED_VS2017_INTEGRATION=0 -p=NEED_VS2019_INTEGRATION=0 -p=NEED_VS2022_INTEGRATION=1 --log-dir=%TEMP%
 
       # We do not install rdflib0-dev here, since we want to  
       # DLite both with and without rdflib (Redland) support and the
@@ -164,8 +168,10 @@ jobs:
           DLITE_IMPORTSKIP_EXITCODE: 1
           # CMAKE_LIBRARY_PATH: ${{ steps.msys2.outputs.msys2-location }}
         run: |
+          # C:\Users\RUNNER~1\AppData\Local\Temp
+          # C:/Users/RUNNER~1/AppData/Local/Temp
           # C:/msys64/tmp/webimage.exe -s -x -f C:/msys64/tmp/webimage_extracted --log C:/msys64/tmp/extract.log
-          # C:/msys64/tmp/webimage_extracted/bootstrapper.exe -s --action install --components=intel.oneapi.win.ifort-compiler:intel.oneapi.win.cpp-dpcpp-common --eula=accept -p=NEED_VS2017_INTEGRATION=0 -p=NEED_VS2019_INTEGRATION=0 -p=NEED_VS2022_INTEGRATION=1 --log-dir=C:/msys63/tmp
+          # C:/Users/RUNNER~1/AppData/Local/Temp/webimage_extracted/bootstrapper.exe -s --action install --components=intel.oneapi.win.ifort-compiler:intel.oneapi.win.cpp-dpcpp-common --eula=accept -p=NEED_VS2017_INTEGRATION=0 -p=NEED_VS2019_INTEGRATION=0 -p=NEED_VS2022_INTEGRATION=1 --log-dir=C:/Users/RUNNER~1/AppData/Local/Temp
           # CMAKE_INCLUDE_PATH='$GITHUB_WORKSPACE'
           cmake -B build . \
             -G "Visual Studio 17 2022" \
@@ -182,13 +188,13 @@ jobs:
         # 2>&1 \
         # | grep dlite_PATH_ESCAPED_NATIVE
 
-      - uses: mxschmitt/action-tmate@v3
-        if: failure()
-
       - name: Build
         run: |
           cmake --build .
         working-directory: build
+
+      - uses: mxschmitt/action-tmate@v3
+        if: failure()
 
       - name: Install
         run: |
