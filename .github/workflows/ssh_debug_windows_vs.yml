@@ -103,7 +103,7 @@ jobs:
           pip3 freeze
 
       - name: Setup Fortran
-        uses: nameloCmaS/setup-fortran
+        uses: nameloCmaS/setup-fortran@v1
         id: setup-fortran
         with:
           compiler: intel
