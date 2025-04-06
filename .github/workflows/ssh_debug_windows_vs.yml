@@ -103,7 +103,7 @@ jobs:
           pip3 freeze
 
       - name: Setup Fortran
-        uses: fortran-lang/setup-fortran@v1
+        uses: nameloCmaS/setup-fortran
         id: setup-fortran
         with:
           compiler: intel
@@ -164,7 +164,9 @@ jobs:
           DLITE_IMPORTSKIP_EXITCODE: 1
           # CMAKE_LIBRARY_PATH: ${{ steps.msys2.outputs.msys2-location }}
         run: |
-          CMAKE_INCLUDE_PATH='$GITHUB_WORKSPACE'
+          # C:/msys64/tmp/webimage.exe -s -x -f C:/msys64/tmp/webimage_extracted --log C:/msys64/tmp/extract.log
+          # C:/msys64/tmp/webimage_extracted/bootstrapper.exe -s --action install --components=intel.oneapi.win.ifort-compiler:intel.oneapi.win.cpp-dpcpp-common --eula=accept -p=NEED_VS2017_INTEGRATION=0 -p=NEED_VS2019_INTEGRATION=0 -p=NEED_VS2022_INTEGRATION=1 --log-dir=C:/msys63/tmp
+          # CMAKE_INCLUDE_PATH='$GITHUB_WORKSPACE'
           cmake -B build . \
             -G "Visual Studio 17 2022" \
             -DFORCE_EXAMPLES=ON \
@@ -172,7 +174,8 @@ jobs:
             -DPython3_FIND_STRATEGY=LOCATION \
             -DPython3_ROOT_DIR=$(python3 -c 'import sys; print(sys.exec_prefix)') \
             -T fortran=ifx \
-            -DCMAKE_Fortran_COMPILER=$(which $FC)
+            -DCMAKE_Fortran_COMPILER="$ONEAPI_ROOT/compiler/latest/bin/ifx.exe" \
+            --debug-trycompile
         # --trace-expand \
         # --trace-source=cmake/MakePlatformPaths.cmake \
         # -Wno-dev \
