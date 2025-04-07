@@ -435,15 +435,15 @@ foreach(source ${sources})
     list(APPEND headers ${header})
   endif()
 endforeach()
+if(NOT "compat-src/getopt.c" IN_LIST source)
+  list(APPEND headers
+    ${CMAKE_CURRENT_SOURCE_DIR}/compat-src/getopt.h
+  )
 list(APPEND headers
   ${CMAKE_CURRENT_BINARY_DIR}/boolean.h
   ${CMAKE_CURRENT_BINARY_DIR}/byteorder.h
   ${CMAKE_CURRENT_BINARY_DIR}/integers.h
   ${CMAKE_CURRENT_BINARY_DIR}/floats.h
-  )
-if(NOT "compat-src/getopt.c" IN_LIST source)
-  list(APPEND headers
-    ${CMAKE_CURRENT_BINARY_DIR}/compat-src/getopt.h
   )
 endif()
 set_target_properties(dlite-utils PROPERTIES PUBLIC_HEADER "${headers}")
