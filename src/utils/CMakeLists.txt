@@ -441,6 +441,11 @@ list(APPEND headers
   ${CMAKE_CURRENT_BINARY_DIR}/integers.h
   ${CMAKE_CURRENT_BINARY_DIR}/floats.h
   )
+if(NOT "compat-src/getopt.c" IN_LIST source)
+  list(APPEND headers
+    ${CMAKE_CURRENT_BINARY_DIR}/compat-src/getopt.h
+  )
+endif()
 set_target_properties(dlite-utils PROPERTIES PUBLIC_HEADER "${headers}")
 
 install(
