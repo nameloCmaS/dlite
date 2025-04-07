@@ -346,10 +346,8 @@ set(sources
   sha3.c
   uuid.c
   uuid4.c
+  compat-src/getopt.c
   )
-if(NOT HAVE_GETOPT AND NOT HAVE_GETOPT_LONG)
-  list(APPEND sources compat-src/getopt.c)
-endif()
 if(WITH_SNPRINTF)
   list(APPEND sources compat-src/snprintf.c)
   add_definitions(-DHAVE_CONFIG_SNPRINTF_H)
@@ -435,17 +433,12 @@ foreach(source ${sources})
     list(APPEND headers ${header})
   endif()
 endforeach()
-if(NOT "compat-src/getopt.c" IN_LIST source)
-  list(APPEND headers
-    ${CMAKE_CURRENT_SOURCE_DIR}/compat-src/getopt.h
-  )
 list(APPEND headers
   ${CMAKE_CURRENT_BINARY_DIR}/boolean.h
   ${CMAKE_CURRENT_BINARY_DIR}/byteorder.h
   ${CMAKE_CURRENT_BINARY_DIR}/integers.h
   ${CMAKE_CURRENT_BINARY_DIR}/floats.h
   )
-endif()
 set_target_properties(dlite-utils PROPERTIES PUBLIC_HEADER "${headers}")
 
 install(

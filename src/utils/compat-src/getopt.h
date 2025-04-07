@@ -11,7 +11,7 @@
 extern "C" {
 #endif // __cplusplus
 
-#include "../config.h"
+#include "../utils/config.h"
 
 #if defined(HAVE_GETOPT) && defined(HAVE_GETOPT_LONG)
 #include <getopt.h>
