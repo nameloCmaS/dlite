@@ -7,10 +7,6 @@
  * https://github.com/takamin/win-c/blob/master/LICENSE
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
-
 #include "../utils/config.h"
 
 #if defined(HAVE_GETOPT) && defined(HAVE_GETOPT_LONG)
@@ -18,6 +14,10 @@ extern "C" {
 #else
 #ifndef _GETOPT_H_
 #define _GETOPT_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
 
     int getopt(int argc, char* const argv[],
             const char* optstring);
@@ -45,9 +45,9 @@ extern "C" {
             const struct option* longopts, int* longindex);
 ****************************************************************************/
 
-#endif // HAVE_GETOPT && HAVE_GETOPT_LONG
+#endif // _GETOPT_H_
 
 #ifdef __cplusplus
 }
 #endif // __cplusplus
-#endif // _GETOPT_H_
+#endif // HAVE_GETOPT && HAVE_GETOPT_LONG
