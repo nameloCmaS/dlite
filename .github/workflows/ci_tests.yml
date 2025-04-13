@@ -195,11 +195,11 @@ jobs:
         run: ctest || ctest --rerun-failed --output-on-failure -V
         working-directory: build
 
-      - name: Upload Build as Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: dlite-build-${{ matrix.os }}
-          path: ${{ github.workspace }}/build
+      # - name: Upload Build as Artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: dlite-build-${{ matrix.os }}
+      #     path: ${{ github.workspace }}/build
 
       - name: Test with all behavior changes disabled
         env:
