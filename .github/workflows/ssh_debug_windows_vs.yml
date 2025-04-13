@@ -66,22 +66,6 @@ jobs:
           which python3
           python3 --version
 
-          # --system-site-packages allows the venv to use
-          # pacman installed packages which won't compile
-          # on MinGW without patching. Some runner images have
-          # a locked install requiring a venv.
-          # python3 -m venv --system-site-packages venv
-          # source venv/bin/activate
-          
-          # due to the way packages are installed in both
-          # the base MinGW Python install for compiled packages
-          # and the remaining platform independant packages are
-          # installed to the venv, the paths Python uses get mixed
-          # up, so we give a hint with the below env var.
-          # a ._pth file may work instead. The env var
-          # __PYVENV_LAUNCHER__ should also work (and is better documented).
-          # echo "PYTHONEXECUTABLE=$VIRTUAL_ENV/bin/python3.exe" >> $GITHUB_ENV
-
           # Need to ensure utf-8 mode on Windows
           echo "PYTHONIOENCODING=utf-8" >> $GITHUB_ENV
           echo "PYTHONUTF8=1" >> $GITHUB_ENV
@@ -131,48 +115,43 @@ jobs:
       #       # python3-yaml
       #     )
       #     choco install ${CHOCO_INSTALL[@]}
-      - uses: robinraju/release-downloader@v1
-        with:
-          # The source repository path.
-          # Expected format {owner}/{repo}
-          # Default: ${{ github.repository }}
-          repository: 'lxml/libxml2-win-binaries'
+      # - uses: robinraju/release-downloader@v1
+      #   with:
+      #     # The source repository path.
+      #     # Expected format {owner}/{repo}
+      #     # Default: ${{ github.repository }}
+      #     repository: 'lxml/libxml2-win-binaries'
 
-          # A flag to set the download target as latest release
-          # The default value is 'false'
-          latest: true
+      #     # A flag to set the download target as latest release
+      #     # The default value is 'false'
+      #     latest: true
 
-          # The name of the file to download.
-          # Use this field only to specify filenames other than tarball or zipball, if any.
-          # Supports wildcard pattern (eg: '*', '*.deb', '*.zip' etc..)
-          fileName: 'lib*.win64.zip'
+      #     # The name of the file to download.
+      #     # Use this field only to specify filenames other than tarball or zipball, if any.
+      #     # Supports wildcard pattern (eg: '*', '*.deb', '*.zip' etc..)
+      #     fileName: 'lib*.win64.zip'
 
-          # Download the attached tarball (*.tar.gz)
-          tarBall: false
+      #     # Download the attached tarball (*.tar.gz)
+      #     tarBall: false
 
-          # Download the attached zipball (*.zip)
-          zipBall: false
+      #     # Download the attached zipball (*.zip)
+      #     zipBall: false
 
-          # Relative path under $GITHUB_WORKSPACE to place the downloaded file(s)
-          # It will create the target directory automatically if not present
-          # eg: out-file-path: "my-downloads" => It will create directory $GITHUB_WORKSPACE/my-downloads
-          out-file-path: 'lib'
+      #     # Relative path under $GITHUB_WORKSPACE to place the downloaded file(s)
+      #     # It will create the target directory automatically if not present
+      #     # eg: out-file-path: "my-downloads" => It will create directory $GITHUB_WORKSPACE/my-downloads
+      #     out-file-path: 'lib'
 
-          # A flag to set if the downloaded assets are archives and should be extracted
-          # Checks all downloaded files if they end with zip, tar or tar.gz and extracts them, if true.
-          # Prints a warning if enabled but file is not an archive - but does not fail.
-          extract: true
+      #     # A flag to set if the downloaded assets are archives and should be extracted
+      #     # Checks all downloaded files if they end with zip, tar or tar.gz and extracts them, if true.
+      #     # Prints a warning if enabled but file is not an archive - but does not fail.
+      #     extract: true
 
+      # Fixme: Automatic detection of installed Visual Studio?
       - name: Configure
         env:
           DLITE_IMPORTSKIP_EXITCODE: 1
-          # CMAKE_LIBRARY_PATH: ${{ steps.msys2.outputs.msys2-location }}
         run: |
-          # C:\Users\RUNNER~1\AppData\Local\Temp
-          # C:/Users/RUNNER~1/AppData/Local/Temp
-          # C:/msys64/tmp/webimage.exe -s -x -f C:/msys64/tmp/webimage_extracted --log C:/msys64/tmp/extract.log
-          # C:/Users/RUNNER~1/AppData/Local/Temp/webimage_extracted/bootstrapper.exe -s --action install --components=intel.oneapi.win.ifort-compiler:intel.oneapi.win.cpp-dpcpp-common --eula=accept -p=NEED_VS2017_INTEGRATION=0 -p=NEED_VS2019_INTEGRATION=0 -p=NEED_VS2022_INTEGRATION=1 --log-dir=C:/Users/RUNNER~1/AppData/Local/Temp
-          # CMAKE_INCLUDE_PATH='$GITHUB_WORKSPACE'
           cmake -B build . \
             -DCMAKE_CONFIGURATION_TYPES:STRING=Release \
             -G "Visual Studio 17 2022" \
@@ -184,20 +163,14 @@ jobs:
             -DCMAKE_Fortran_COMPILER=$FC \
             -DPython3_FIND_STRATEGY=LOCATION \
             -DPython3_ROOT_DIR=$(python3 -c 'import sys; print(sys.exec_prefix)') \
-            --debug-trycompile
+        # --debug-trycompile
         # --trace-expand \
         # --trace-source=cmake/MakePlatformPaths.cmake \
-        # -Wno-dev \
-        # 2>&1 \
-        # | grep dlite_PATH_ESCAPED_NATIVE
 
       - name: Build
         run: |
           cmake --build . --config Release
         working-directory: build
-
-      - uses: mxschmitt/action-tmate@v3
-        if: failure()
 
       - name: Install
         run: |
@@ -233,3 +206,6 @@ jobs:
         run: |
           python3 -m pip install --user dist/*.whl
           python3 bindings/python/tests/__main__.py
+
+      - uses: mxschmitt/action-tmate@v3
+        if: failure()
