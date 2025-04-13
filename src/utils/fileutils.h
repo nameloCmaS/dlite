@@ -72,7 +72,7 @@ typedef enum _FUPlatform {
 /** Directory state. */
 typedef DIR FUDir;
 
-/** List of directory search pathes */
+/** List of directory search paths. */
 typedef struct _FUPaths {
   size_t n;             /*!< Number of paths */
   size_t size;          /*!< Allocated number of paths */
