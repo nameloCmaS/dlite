@@ -106,6 +106,10 @@ foreach(test ${tests})
   )
 
 
+  if(WIN32)
+    set_property(TEST ${test} PROPERTY
+      ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${dlite_BINARY_DIR}/src")
+  endif()
   set_property(TEST ${test} PROPERTY
     ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:$<JOIN:${dlite_PATH_NATIVE},\\\;>")
   if (WIN32 AND PYTHON_IS_ANACONDA)
