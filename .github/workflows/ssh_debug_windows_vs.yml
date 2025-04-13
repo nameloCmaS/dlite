@@ -99,17 +99,28 @@ jobs:
 
           REM download and unpack installer
           curl.exe --output %TEMP%\webimage.exe --url %WINDOWS_HPCKIT_URL% --retry 5 --retry-delay 5
-          start /b /wait %TEMP%\webimage.exe -s -x -f %TEMP%\webimage_extracted --log %TEMP%\extract.log
-          del %TEMP%\webimage.exe
+          START /b /wait %TEMP%\webimage.exe -s -x -f %TEMP%\webimage_extracted --log %TEMP%\extract.log
+          DEL %TEMP%\webimage.exe
 
           REM run installer
           %TEMP%\webimage_extracted\bootstrapper.exe --silent --action install --components=%WINDOWS_HPCKIT_COMPONENTS% --eula=accept --log-dir=%TEMP%\intel_fortran_installer_logs
 
-      - name: Upload Fortran install logs as Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: fortran-install-logs
-          path: C:/Users/RUNNER~1/AppData/Local/Temp/intel_fortran_installer_logs
+
+          FOR /F delims=; %%V IN ("LD_LIBRARY_PATH;LIBRARY_PATH;INFOPATH;MANPATH;ONEAPI_ROOT;CLASSPATH;CMAKE_PREFIX_PATH;OCL_ICD_FILENAMES;INTEL_PYTHONHOME;CPATH;SETVARS_COMPLETED") DO
+            ECHO %%V=%%%V%>>%GITHUB_ENV%
+
+          ECHO SETVARS_COMPLETED=1>>$GITHUB_ENV
+          ECHO FC=ifx>>%GITHUB_ENV%
+          ECHO FPM_FC=ifx>>%GITHUB_ENV%
+
+          FOR /F delims=; %%P IN ('%PATH%') DO
+            ECHO %%P>>%GITHUB_PATH%
+
+      # - name: Upload Fortran install logs as Artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: fortran-install-logs
+      #     path: C:/Users/RUNNER~1/AppData/Local/Temp/intel_fortran_installer_logs
 
       # We do not install rdflib0-dev here, since we want to  
       # DLite both with and without rdflib (Redland) support and the
