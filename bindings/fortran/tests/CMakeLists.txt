@@ -28,9 +28,7 @@ foreach(name ${metadata})
     ${dlite-bindings-fortran_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     )
-  set_target_properties(${name} PROPERTIES
-    DEPENDS dlite-codegen
-    )
+  add_dependencies(${name} dlite-codegen)
 endforeach()
 
 set(tests
