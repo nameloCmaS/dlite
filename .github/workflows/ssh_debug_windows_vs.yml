@@ -94,8 +94,8 @@ jobs:
         run: |
           REM Fortran Essentials 2025.1.0
           REM https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html?packages=fortran-essentials&fortran-essentials-os=windows&fortran-essentials-win=offline
-          WINDOWS_HPCKIT_URL=https://registrationcenter-download.intel.com/akdlm/IRC_NAS/6ccdad73-60b6-4758-bc1a-a5ff368e9cf0/intel-fortran-essentials-2025.1.0.555_offline.exe
-          WINDOWS_HPCKIT_COMPONENTS=intel.oneapi.win.ifort-compiler:intel.oneapi.win.cpp-dpcpp-common
+          SET WINDOWS_HPCKIT_URL=https://registrationcenter-download.intel.com/akdlm/IRC_NAS/6ccdad73-60b6-4758-bc1a-a5ff368e9cf0/intel-fortran-essentials-2025.1.0.555_offline.exe
+          SET WINDOWS_HPCKIT_COMPONENTS=intel.oneapi.win.ifort-compiler:intel.oneapi.win.cpp-dpcpp-common
 
           REM download and unpack installer
           curl.exe --output %TEMP%\webimage.exe --url %WINDOWS_HPCKIT_URL% --retry 5 --retry-delay 5
