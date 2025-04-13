@@ -86,15 +86,30 @@ jobs:
           python --version
           pip3 freeze
 
-      - name: Setup Fortran
-        uses: nameloCmaS/setup-fortran@v1
-        id: setup-fortran
+      # Uses batch script from fotran-lang/setup-fortran but also incudes the Visual Studio integration installation
+      # Very slow install approx 20-30 minutes for oneAPI HPC Toolkit
+      # Cache for fotran-lang/setup-fortran does not yet cache the Visual Studio integration install
+      - name: Setup Intel Fortran Compiler and Visual Studio Integration
+        shell: cmd
+        run: |
+          REM Fortran Essentials 2025.1.0
+          REM https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html?packages=fortran-essentials&fortran-essentials-os=windows&fortran-essentials-win=offline
+          WINDOWS_HPCKIT_URL=https://registrationcenter-download.intel.com/akdlm/IRC_NAS/6ccdad73-60b6-4758-bc1a-a5ff368e9cf0/intel-fortran-essentials-2025.1.0.555_offline.exe
+          WINDOWS_HPCKIT_COMPONENTS=intel.oneapi.win.ifort-compiler:intel.oneapi.win.cpp-dpcpp-common
+
+          REM download and unpack installer
+          curl.exe --output %TEMP%\webimage.exe --url %WINDOWS_HPCKIT_URL% --retry 5 --retry-delay 5
+          start /b /wait %TEMP%\webimage.exe -s -x -f %TEMP%\webimage_extracted --log %TEMP%\extract.log
+          del %TEMP%\webimage.exe
+
+          REM run installer
+          %TEMP%\webimage_extracted\bootstrapper.exe --silent --action install --components=%WINDOWS_HPCKIT_COMPONENTS% --eula=accept --log-dir=%TEMP%\intel_fortran_installer_logs
+
+      - name: Upload Fortran install logs as Artifact
+        uses: actions/upload-artifact@v4
         with:
-          compiler: intel
-      # - name: Install Fortran Visual Studio Integration
-      #   shell: cmd
-      #   run: |
-      #     %TEMP%\webimage_extracted\bootstrapper.exe -s --action install --components=%2 --eula=accept -p=NEED_VS2017_INTEGRATION=0 -p=NEED_VS2019_INTEGRATION=0 -p=NEED_VS2022_INTEGRATION=1 --log-dir=%TEMP%
+          name: fortran-install-logs
+          path: C:/Users/RUNNER~1/AppData/Local/Temp/intel_fortran_installer_logs
 
       # We do not install rdflib0-dev here, since we want to  
       # DLite both with and without rdflib (Redland) support and the
@@ -160,7 +175,7 @@ jobs:
             -DFORCE_EXAMPLES=ON \
             -DWITH_FORTRAN=YES \
             -T fortran=ifx \
-            -DCMAKE_Fortran_COMPILER=$FC \
+            # -DCMAKE_Fortran_COMPILER=$FC \
             -DPython3_FIND_STRATEGY=LOCATION \
             -DPython3_ROOT_DIR=$(python3 -c 'import sys; print(sys.exec_prefix)') \
         # --debug-trycompile
