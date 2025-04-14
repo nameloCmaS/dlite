@@ -90,31 +90,43 @@ jobs:
       # Very slow install approx 20-30 minutes for oneAPI HPC Toolkit
       # Cache for fotran-lang/setup-fortran does not yet cache the Visual Studio integration install
       - name: Setup Intel Fortran Compiler and Visual Studio Integration
-        shell: cmd
         run: |
-          REM Fortran Essentials 2025.1.0
-          REM https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html?packages=fortran-essentials&fortran-essentials-os=windows&fortran-essentials-win=offline
-          SET WINDOWS_HPCKIT_URL=https://registrationcenter-download.intel.com/akdlm/IRC_NAS/6ccdad73-60b6-4758-bc1a-a5ff368e9cf0/intel-fortran-essentials-2025.1.0.555_offline.exe
-          SET WINDOWS_HPCKIT_COMPONENTS=intel.oneapi.win.ifort-compiler:intel.oneapi.win.cpp-dpcpp-common
+          export_intel_vars()
+          {
+            cat >> $GITHUB_ENV <<EOF
+          LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+          LIBRARY_PATH=$LIBRARY_PATH
+          INFOPATH=$INFOPATH
+          MANPATH=$MANPATH
+          ONEAPI_ROOT=$ONEAPI_ROOT
+          CLASSPATH=$CLASSPATH
+          CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH
+          OCL_ICD_FILENAMES=$OCL_ICD_FILENAMES
+          INTEL_PYTHONHOME=$INTEL_PYTHONHOME
+          CPATH=$CPATH
+          SETVARS_COMPLETED=$SETVARS_COMPLETED
+          EOF
+            for path in ${PATH//:/ }; do
+              echo $path >> $GITHUB_PATH
+            done
+          }
 
-          REM download and unpack installer
-          curl.exe --output %TEMP%\webimage.exe --url %WINDOWS_HPCKIT_URL% --retry 5 --retry-delay 5
-          START /b /wait %TEMP%\webimage.exe -s -x -f %TEMP%\webimage_extracted --log %TEMP%\extract.log
-          DEL %TEMP%\webimage.exe
+          # Fortran Essentials 2025.1.0
+          # https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html?packages=fortran-essentials&fortran-essentials-os=windows&fortran-essentials-win=offline
+          WINDOWS_HPCKIT_URL="https://registrationcenter-download.intel.com/akdlm/IRC_NAS/6ccdad73-60b6-4758-bc1a-a5ff368e9cf0/intel-fortran-essentials-2025.1.0.555_offline.exe"
+          WINDOWS_HPCKIT_COMPONENTS="intel.oneapi.win.ifort-compiler:intel.oneapi.win.cpp-dpcpp-common"
 
-          REM run installer
-          %TEMP%\webimage_extracted\bootstrapper.exe --silent --action install --components=%WINDOWS_HPCKIT_COMPONENTS% --eula=accept --log-dir=%TEMP%\intel_fortran_installer_logs
+          # Download and unpack the installer
+          curl --output $TEMP/webimage.exe --url $WINDOWS_HPCKIT_URL --retry 5 --retry-delay 5
+          $TEMP/webimage.exe -s -x -f $TEMP/webimage_extracted --log $TEMP/extract.log
+          rm $TEMP/webimage.exe
 
-
-          FOR /F delims=; %%V IN ("LD_LIBRARY_PATH;LIBRARY_PATH;INFOPATH;MANPATH;ONEAPI_ROOT;CLASSPATH;CMAKE_PREFIX_PATH;OCL_ICD_FILENAMES;INTEL_PYTHONHOME;CPATH;SETVARS_COMPLETED") DO
-            ECHO %%V=%%%V%>>%GITHUB_ENV%
-
-          ECHO SETVARS_COMPLETED=1>>$GITHUB_ENV
-          ECHO FC=ifx>>%GITHUB_ENV%
-          ECHO FPM_FC=ifx>>%GITHUB_ENV%
-
-          FOR /F delims=; %%P IN ('%PATH%') DO
-            ECHO %%P>>%GITHUB_PATH%
+          # Run the installer
+          $TEMP/webimage_extracted/bootstrapper.exe --silent --action install --components=$WINDOWS_HPCKIT_COMPONENTS --eula=accept --log-dir=$TEMP/intel_fortran_installer_logs
+          
+          export_intel_vars
+          echo "FC=ifx" >> $GITHUB_ENV
+          echo "FPM_FC=ifx" >> $GITHUB_ENV
 
       # - name: Upload Fortran install logs as Artifact
       #   uses: actions/upload-artifact@v4

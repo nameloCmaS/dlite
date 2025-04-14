@@ -4,7 +4,7 @@ project(dlite-tools C)
 # TODO - It would be preferable to link with the shared libraries.
 # How to do that without breaking the docker build?
 
-if(NOT HAVE_GETOPT AND NOT HAVE_GETOPT_LONG)
+if(WIN32 AND NOT MINGW)
   set(getopt_source "../src/utils/compat-src/getopt.c")
 endif()
 
