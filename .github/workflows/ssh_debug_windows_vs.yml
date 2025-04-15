@@ -107,7 +107,7 @@ jobs:
           SETVARS_COMPLETED=$SETVARS_COMPLETED
           EOF
             for path in ${PATH//:/ }; do
-              echo $path >> $GITHUB_PATH
+              echo "$path" >> $GITHUB_PATH
             done
           }
 
