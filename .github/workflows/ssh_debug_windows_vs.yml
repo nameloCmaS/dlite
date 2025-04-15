@@ -124,9 +124,10 @@ jobs:
           # Run the installer
           $TEMP/webimage_extracted/bootstrapper.exe --silent --action install --components=$WINDOWS_HPCKIT_COMPONENTS --eula=accept --log-dir=$TEMP/intel_fortran_installer_logs
           
-          export_intel_vars
-          echo "FC=ifx" >> $GITHUB_ENV
-          echo "FPM_FC=ifx" >> $GITHUB_ENV
+          echo env
+          # export_intel_vars
+          # echo "FC=ifx" >> $GITHUB_ENV
+          # echo "FPM_FC=ifx" >> $GITHUB_ENV
 
       # - name: Upload Fortran install logs as Artifact
       #   uses: actions/upload-artifact@v4
