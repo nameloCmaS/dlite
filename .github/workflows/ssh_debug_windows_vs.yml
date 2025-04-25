@@ -111,9 +111,9 @@ jobs:
             done
           }
 
-          # Fortran Essentials 2025.1.0
-          # https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html?packages=fortran-essentials&fortran-essentials-os=windows&fortran-essentials-win=offline
-          WINDOWS_HPCKIT_URL="https://registrationcenter-download.intel.com/akdlm/IRC_NAS/6ccdad73-60b6-4758-bc1a-a5ff368e9cf0/intel-fortran-essentials-2025.1.0.555_offline.exe"
+          # Intel oneAPI HPC Toolkit (version 2025.1.0) 
+          # https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html?packages=hpc-toolkit&hpc-toolkit-os=windows&hpc-toolkit-win=offline
+          WINDOWS_HPCKIT_URL="https://registrationcenter-download.intel.com/akdlm/IRC_NAS/0ba263f5-de00-4e91-a780-fdb9e131c1e8/intel-oneapi-hpc-toolkit-2025.1.0.665_offline.exe"
           WINDOWS_HPCKIT_COMPONENTS="intel.oneapi.win.ifort-compiler:intel.oneapi.win.cpp-dpcpp-common"
 
           # Download and unpack the installer
@@ -125,9 +125,9 @@ jobs:
           $TEMP/webimage_extracted/bootstrapper.exe --silent --action install --components=$WINDOWS_HPCKIT_COMPONENTS --eula=accept --log-dir=$TEMP/intel_fortran_installer_logs
           
           echo env
-          # export_intel_vars
-          # echo "FC=ifx" >> $GITHUB_ENV
-          # echo "FPM_FC=ifx" >> $GITHUB_ENV
+          export_intel_vars
+          echo "FC=ifx" >> $GITHUB_ENV
+          echo "FPM_FC=ifx" >> $GITHUB_ENV
 
       # - name: Upload Fortran install logs as Artifact
       #   uses: actions/upload-artifact@v4
