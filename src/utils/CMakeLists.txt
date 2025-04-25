@@ -84,7 +84,7 @@ check_symbol_exists(wcstombs_s          stdlib.h                 HAVE_WCSTOMBS_S
 check_symbol_exists(strlcpy             string.h                 HAVE_STRLCPY)
 check_symbol_exists(strlcat             string.h                 HAVE_STRLCAT)
 
-check_symbol_exists(getopt              unistd.h                 HAVE_GETOPT)
+check_symbol_exists(getopt              getopt.h                 HAVE_GETOPT)
 check_symbol_exists(getopt_long         getopt.h                 HAVE_GETOPT_LONG)
 check_symbol_exists(access              unistd.h                 HAVE_ACCESS)
 check_symbol_exists(_access             io.h                     HAVE__ACCESS)
@@ -348,8 +348,10 @@ set(sources
   sha3.c
   uuid.c
   uuid4.c
-  compat-src/getopt.c
   )
+if(NOT HAVE_GETOPT AND NOT HAVE_GETOPT_LONG)
+  list(APPEND sources compat-src/getopt.c)
+endif()  
 if(WITH_SNPRINTF)
   list(APPEND sources compat-src/snprintf.c)
   add_definitions(-DHAVE_CONFIG_SNPRINTF_H)

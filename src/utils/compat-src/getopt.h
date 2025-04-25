@@ -9,9 +9,9 @@
 
 #include "../utils/config.h"
 
-#if defined(HAVE_GETOPT) && defined(HAVE_GETOPT_LONG)
+#if defined(HAVE_GETOPT) && defined(HAVE_GETOPT_LONG) && !defined(__MINGW64__)
 #include <getopt.h>
-#else
+#elif !defined(__MINGW64__)
 #ifndef _GETOPT_H_
 #define _GETOPT_H_
 
