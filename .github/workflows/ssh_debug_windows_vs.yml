@@ -49,43 +49,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python 3.10
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-
-# # # Debug .dll loaders
-# PATH="/c/Program Files (x86)/Windows Kits/10/Debuggers/x64:$PATH"
-# cd src/utils/tests
-# _EXE=test_err.exe
-# gflags -i $_EXE +sls
-# cdb -c "g;q" $_EXE
-
-      - name: Install Python dependencies
-        run: |
-          which python3
-          python3 --version
-
-          # Need to ensure utf-8 mode on Windows
-          echo "PYTHONIOENCODING=utf-8" >> $GITHUB_ENV
-          echo "PYTHONUTF8=1" >> $GITHUB_ENV
-
-          python3 -m pip install --upgrade pip
-          python3 -m pip --version
-
-          python3 -m pip install -U setuptools wheel
-          python3 -m pip install -r requirements.txt -r requirements_full.txt -r requirements_dev.txt
-
-      - name: Check numpy
-        run: |
-          python3 -c 'import numpy as np; print(np.get_include())'
-
-      - name: List installed Python packages
-        run: |
-          uname -a
-          python --version
-          pip3 freeze
-
       # Uses batch script from fotran-lang/setup-fortran but also incudes the Visual Studio integration installation
       # Very slow install approx 20-30 minutes for oneAPI HPC Toolkit
       # Cache for fotran-lang/setup-fortran does not yet cache the Visual Studio integration install
@@ -134,6 +97,43 @@ jobs:
       #   with:
       #     name: fortran-install-logs
       #     path: C:/Users/RUNNER~1/AppData/Local/Temp/intel_fortran_installer_logs
+
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+# # # Debug .dll loaders
+# PATH="/c/Program Files (x86)/Windows Kits/10/Debuggers/x64:$PATH"
+# cd src/utils/tests
+# _EXE=test_err.exe
+# gflags -i $_EXE +sls
+# cdb -c "g;q" $_EXE
+
+      - name: Install Python dependencies
+        run: |
+          which python3
+          python3 --version
+
+          # Need to ensure utf-8 mode on Windows
+          echo "PYTHONIOENCODING=utf-8" >> $GITHUB_ENV
+          echo "PYTHONUTF8=1" >> $GITHUB_ENV
+
+          python3 -m pip install --upgrade pip
+          python3 -m pip --version
+
+          python3 -m pip install -U setuptools wheel
+          python3 -m pip install -r requirements.txt -r requirements_full.txt -r requirements_dev.txt
+
+      - name: Check numpy
+        run: |
+          python3 -c 'import numpy as np; print(np.get_include())'
+
+      - name: List installed Python packages
+        run: |
+          uname -a
+          python --version
+          pip3 freeze
 
       # We do not install rdflib0-dev here, since we want to  
       # DLite both with and without rdflib (Redland) support and the
