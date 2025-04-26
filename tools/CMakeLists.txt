@@ -6,8 +6,6 @@ project(dlite-tools C)
 
 if(WIN32 AND NOT MINGW)
   set(getopt_source "../src/utils/compat-src/getopt.c")
-elseif(MINGW)
-  add_compile_definitions("__GETOPT_LONG_H__")
 endif()
 
 

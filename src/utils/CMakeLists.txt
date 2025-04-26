@@ -348,8 +348,10 @@ set(sources
   sha3.c
   uuid.c
   uuid4.c
-  compat-src/getopt.c
-  ) 
+  )
+if(NOT(MINGW AND HAVE_GETOPT_LONG))
+  list(APPEND sources compat-src/getopt.c)
+endif()
 if(WITH_SNPRINTF)
   list(APPEND sources compat-src/snprintf.c)
   add_definitions(-DHAVE_CONFIG_SNPRINTF_H)
