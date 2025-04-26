@@ -6,12 +6,6 @@
  * Released under the MIT license
  * https://github.com/takamin/win-c/blob/master/LICENSE
  */
-
-#include "../utils/config.h"
-
-#if defined(HAVE_GETOPT) && defined(HAVE_GETOPT_LONG) && !defined(__MINGW64__)
-#include <getopt.h>
-#elif !defined(__MINGW64__)
 #ifndef _GETOPT_H_
 #define _GETOPT_H_
 
@@ -44,10 +38,7 @@ extern "C" {
             const char* optstring,
             const struct option* longopts, int* longindex);
 ****************************************************************************/
-
-#endif // _GETOPT_H_
-
 #ifdef __cplusplus
 }
 #endif // __cplusplus
-#endif // HAVE_GETOPT && HAVE_GETOPT_LONG
+#endif // _GETOPT_H_
