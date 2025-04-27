@@ -1,4 +1,4 @@
-tripper==0.2.14
+tripper @ git+https://github.com/EMMC-ASBL/tripper.git@master
 pint>=0.15,<1
 
 oteapi-core>=0.6.1,<1
