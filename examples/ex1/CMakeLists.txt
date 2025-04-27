@@ -14,6 +14,9 @@ set(CMAKE_MODULE_PATH
   ${DLITE_ROOT}/share/Modules
   ${DLITE_ROOT}/share/dlite/cmake
   )
+
+message(STATUS "dlite_LD_LIBRARY_PATH: *${dlite_LD_LIBRARY_PATH}*")
+
 find_package(dlite REQUIRED)
 
 include(dliteCodeGen)
