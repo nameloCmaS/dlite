@@ -217,7 +217,7 @@ char *helper(const DLiteStoragePlugin *api)
         FAILCODE(dliteAttributeError, "cannot import inspect module");
       if (!((getdoc = PyObject_GetAttrString(inspect, "getdoc")) && PyCallable_Check(getdoc)))
         FAILCODE(dliteAttributeError, "cannot access inspect.getdoc() or is not callable as expected");
-      if (!(pyopendoc = PyObject_CallOneArg(getdoc, open)))
+      if (!(pyopendoc = PyObject_CallFunctionObjArgs(getdoc, open)))
         FAILCODE1(dliteAttributeError, "cannot call inspect.getdoc() with %s.open", classname);
 #else
       if (!(pyopendoc = PyObject_GetAttrString(open, "__doc__")))
