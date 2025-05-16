@@ -186,6 +186,7 @@ char *helper(const DLiteStoragePlugin *api)
 {
   PyObject *v=NULL, *pyclassdoc=NULL, *open=NULL, *pyopendoc=NULL;
   PyObject *class = (PyObject *)api->data;
+  PyObject *inspect=NULL, *getdoc=NULL;
   const char *classname, *classdoc=NULL, *opendoc=NULL;
   char *doc=NULL;
   Py_ssize_t n=0, clen=0, olen=0, i, newlines=0;
@@ -211,7 +212,6 @@ char *helper(const DLiteStoragePlugin *api)
       // implemented into CPython in: https://github.com/python/cpython/pull/106411
       // This change may break custom tests or code by others - low risk but it is there
       // howver, compatability with Python 3.13 onwards will require this change.
-      PyObject *inspect=NULL, *getdoc=NULL;
       // Get de-indented function docstring using inspect.getdoc(open)
       if (!(inspect = PyImport_ImportModule("inspect")))
         FAILCODE(dliteAttributeError, "cannot import inspect module");
@@ -250,7 +250,12 @@ char *helper(const DLiteStoragePlugin *api)
   Py_XDECREF(v);
   Py_XDECREF(pyclassdoc);
   Py_XDECREF(open);
+  #if PY_VERSION_HEX < 0x030d0000  /* Python < 3.13 */
+    Py_XDECREF(getdoc);
+    Py_XDECREF(inspect);
+  #endif
   Py_XDECREF(pyopendoc);
+
   return doc;
 }
 
