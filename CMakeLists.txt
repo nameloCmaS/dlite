@@ -442,6 +442,8 @@ if(WITH_FORTRAN)
   enable_fortran_compiler_flag_if_supported("-Wextra")
   enable_fortran_compiler_flag_if_supported("-Wpedantic")
   enable_fortran_compiler_flag_if_supported("-Werror")
+  # Known "noisy" warning with gfortran
+  enable_fortran_compiler_flag_if_supported("-Wno-maybe-uninitialized")
 endif()
 
 # Unset extra_link_libraries if it is empty
