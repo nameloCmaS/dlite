@@ -207,12 +207,14 @@ char *helper(const DLiteStoragePlugin *api)
     if (!(open = PyObject_GetAttrString(class, "open")))
       FAILCODE1(dliteAttributeError, "cannot access %s.open()", classname);
     if (PyObject_HasAttrString(open, "__doc__")) {
+
 #if PY_VERSION_HEX < 0x030d0000  /* Python < 3.13 */
+      // Get de-indented function docstring using inspect.getdoc(open)
+      //
       // Aligns pre-Python 3.13 behaviour with new behaviour which was
       // implemented into CPython in: https://github.com/python/cpython/pull/106411
-      // This change may break custom tests or code by others - low risk but it is there
-      // howver, compatability with Python 3.13 onwards will require this change.
-      // Get de-indented function docstring using inspect.getdoc(open)
+      // This change may break custom tests or code by others - low risk but it is there.
+      // However, compatability with Python 3.13 onwards will require this change.
       if (!(inspect = PyImport_ImportModule("inspect")))
         FAILCODE(dliteAttributeError, "cannot import inspect module");
       if (!((getdoc = PyObject_GetAttrString(inspect, "getdoc")) && PyCallable_Check(getdoc)))
