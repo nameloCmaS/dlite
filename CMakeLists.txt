@@ -113,10 +113,7 @@ if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
 endif()
 
 # Enable compiler warnings
-if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR
-  CMAKE_C_COMPILER_ID STREQUAL "Clang" OR
-  CMAKE_C_COMPILER_ID STREQUAL "AppleClang"
-)
+if(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
   enable_c_compiler_flag_if_supported("-Wall")
   enable_c_compiler_flag_if_supported("-Wextra")
   enable_c_compiler_flag_if_supported("-Wpedantic")
