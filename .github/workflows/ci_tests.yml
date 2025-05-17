@@ -30,7 +30,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # os: [ubuntu-latest, macos-latest, windows-latest]
         os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ["3.10"]
         subsystem: [none]
@@ -47,8 +46,6 @@ jobs:
             python-version: "3.13"
           - os: windows-latest
             subsystem: mingw
-          - python-version: "3.10"
-            dlite-behavior: [OFF, ON]
 
     steps:
       - name: Setup MSYS2
@@ -279,10 +276,20 @@ jobs:
           ctest --build-config Release || ctest --build-config Release --rerun-failed --output-on-failure -V
         working-directory: build
 
-      - name: Test with all behavior changes ${{ matrix.dlite-behavior == 'OFF' && 'disabled' || 'enabled' }}
-        if: matrix.dlite-behavior
+      - name: Test with all behavior changes disabled
         env:
-          DLITE_BEHAVIOR: ${{ matrix['dlite-behavior'] }}
+          DLITE_BEHAVIOR: OFF
+        run: |
+          if [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == mingw ]] ;
+          then
+            source ../venv/bin/activate
+          fi
+          ctest --build-config Release || ctest --build-config Release --rerun-failed --output-on-failure -V
+        working-directory: build
+
+      - name: Test with all behavior changes enabled
+        env:
+          DLITE_BEHAVIOR: ON
         run: |
           if [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == mingw ]] ;
           then
