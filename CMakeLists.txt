@@ -303,7 +303,7 @@ if(WITH_PYTHON)
     OUTPUT_VARIABLE Python3_LDFLAGS
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
-  if(Python3_LDFLAGS)
+  if(Python3_LDFLAGS AND NOT Python3_LDFLAGS STREQUAL "None")
     list(APPEND extra_link_libraries ${Python3_LDFLAGS})
   endif()
 
