@@ -119,7 +119,7 @@ jobs:
           fi
 
 
-      - name: Install Python ${{ matrix.python-version }} dependencies
+      - name: Install Python dependencies
         run: |
           if [[ ${{ matrix.os }} == ubuntu* ]] || [[ ${{ matrix.os }} == macos* ]] ;
           then
