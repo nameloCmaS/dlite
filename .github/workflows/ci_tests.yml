@@ -83,9 +83,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Set Python version environment var
-        run: |
-          echo "PYTHON_VERSION=${{ matrix.python-version }}" >> "$GITHUB_ENV"
 
 
         # We do not install rdflib0-dev here, since we want to  
