@@ -278,7 +278,7 @@ jobs:
       - name: Test with all behavior changes ${{ matrix.dlite-behavior == 'OFF' && 'disabled' || 'enabled' }}
         if: matrix.dlite-behavior
         env:
-          DLITE_BEHAVIOR: ${{ matrix.dlite-behavior }}
+          DLITE_BEHAVIOR: ${{ matrix['dlite-behavior'] }}
         run: |
           if [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == "mingw" ]] ;
           then
