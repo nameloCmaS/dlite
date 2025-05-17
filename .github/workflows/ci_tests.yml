@@ -22,7 +22,7 @@ on:
 
 jobs:
   build:
-    name: ${{ matrix.os }}${{ matrix.subsystem == 'none' && '' || ' (MinGW)' }} Python ${{ matrix.python-version }}
+    name: ${{ matrix.os }}-${{ matrix.subsystem }}-py${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     defaults:
       run:
