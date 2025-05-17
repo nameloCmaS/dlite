@@ -216,7 +216,6 @@ jobs:
           compiler: gcc
 
       - name: Configure CMake
-        shell: pwsh
         env:
           DLITE_IMPORTSKIP_EXITCODE: 1
         run: |
