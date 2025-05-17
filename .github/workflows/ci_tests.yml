@@ -221,29 +221,30 @@ jobs:
         run: |
           if [[ ${{ matrix.os }} == ubuntu* ]] || [[ ${{ matrix.os }} == macos* ]] ;
           then
-            cmake -B build . `
-              -DFORCE_EXAMPLES=ON `
-              -DWITH_FORTRAN=YES `
-              -DPython3_FIND_STRATEGY=LOCATION `
+            cmake -B build . \
+              -DCMAKE_CONFIGURATION_TYPES:STRING=Release \
+              -DFORCE_EXAMPLES=ON \
+              -DWITH_FORTRAN=YES \
+              -DPython3_FIND_STRATEGY=LOCATION \
               -DPython3_ROOT_DIR=$(python3 -c 'import sys; print(sys.exec_prefix)')
 
           elif [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == none ]] ;
           then
             cmake -B build . \
               -DCMAKE_CONFIGURATION_TYPES:STRING=Release \
-              -G "Visual Studio 17 2022" \
-              -DCMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE=x64 \
-              -A x64 \
               -DFORCE_EXAMPLES=ON \
               -DWITH_FORTRAN=NO \
-              -T fortran=ifx \
               -DPython3_FIND_STRATEGY=LOCATION \
-              -DPython3_ROOT_DIR=$(python3 -c 'import sys; print(sys.exec_prefix)')
+              -DPython3_ROOT_DIR=$(python3 -c 'import sys; print(sys.exec_prefix)') \
+              -G "Visual Studio 17 2022" \
+              -DCMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE=x64 \
+              -A x64
           
           elif [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == mingw ]] ;
           then
             source venv/bin/activate
             cmake -B build . \
+              -DCMAKE_CONFIGURATION_TYPES:STRING=Release \
               -DFORCE_EXAMPLES=ON \
               -DWITH_FORTRAN=NO \
               -DPython3_FIND_STRATEGY=LOCATION \
