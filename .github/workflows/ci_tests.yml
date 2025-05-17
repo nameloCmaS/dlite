@@ -148,7 +148,7 @@ jobs:
             python3 -m pip install -U setuptools wheel
             python3 -m pip install -r requirements.txt -r requirements_full.txt -r requirements_dev.txt
 
-          elif [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == "mingw" ]] ;
+          elif [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == mingw ]] ;
           then
             which python3
             python3 --version
@@ -189,7 +189,7 @@ jobs:
 
       - name: Check numpy
         run: |
-          if [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == "mingw" ]] ;
+          if [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == mingw ]] ;
           then
             source venv/bin/activate
           fi
@@ -197,7 +197,7 @@ jobs:
 
       - name: List installed Python packages
         run: |
-          if [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == "mingw" ]] ;
+          if [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == mingw ]] ;
           then
             source venv/bin/activate
           fi
@@ -238,7 +238,7 @@ jobs:
               -DPython3_FIND_STRATEGY=LOCATION \
               -DPython3_ROOT_DIR=$(python3 -c 'import sys; print(sys.exec_prefix)')
           
-          elif [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == "mingw" ]] ;
+          elif [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == mingw ]] ;
           then
             source venv/bin/activate
             cmake -B build . \
@@ -252,7 +252,7 @@ jobs:
  
       - name: Build
         run: |
-          if [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == "mingw" ]] ;
+          if [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == mingw ]] ;
           then
             source ../venv/bin/activate
           fi
@@ -261,7 +261,7 @@ jobs:
   
       - name: Install
         run: |
-          if [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == "mingw" ]] ;
+          if [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == mingw ]] ;
           then
             source ../venv/bin/activate
           fi
@@ -272,7 +272,7 @@ jobs:
         env:
           DLITE_PYDEBUG: ""
         run: |
-          if [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == "mingw" ]] ;
+          if [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == mingw ]] ;
           then
             source ../venv/bin/activate
           fi
@@ -284,7 +284,7 @@ jobs:
         env:
           DLITE_BEHAVIOR: ${{ matrix['dlite-behavior'] }}
         run: |
-          if [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == "mingw" ]] ;
+          if [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == mingw ]] ;
           then
             source ../venv/bin/activate
           fi
@@ -293,7 +293,7 @@ jobs:
 
       - name: Build ${{ matrix.os }} wheel
         run: |
-          if [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == "mingw" ]] ;
+          if [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == mingw ]] ;
           then
             source venv/bin/activate
           fi
@@ -301,7 +301,7 @@ jobs:
 
       - name: Install Python package and test the installation
         run: |
-          if [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == "mingw" ]] ;
+          if [[ ${{ matrix.os }} == windows* ]] && [[ ${{ matrix.subsystem }} == mingw ]] ;
           then
             source venv/bin/activate
           fi
