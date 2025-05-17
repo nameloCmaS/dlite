@@ -86,7 +86,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - run: |
+      - name: Set Python version environment var
+        run: |
           echo "PYTHON_VERSION=${{ matrix.python-version }}" >> "$GITHUB_ENV"
 
 
