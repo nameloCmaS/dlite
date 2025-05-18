@@ -144,7 +144,7 @@ jobs:
             python3 -m pip install -U setuptools wheel
             python3 -m pip install -r requirements.txt -r requirements_full.txt -r requirements_dev.txt
 
-          elif [[ ${{ matrix.os }} == windows* ]] && [[ "${{ matrix.subsystem }}"" == mingw ]] ;
+          elif [[ ${{ matrix.os }} == windows* ]] && [[ "${{ matrix.subsystem }}" == mingw ]] ;
           then
             which python3
             python3 --version
