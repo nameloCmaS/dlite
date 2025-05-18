@@ -3,8 +3,8 @@
 cmake_minimum_required(VERSION 3.16)
 
 if(APPLE)
+  set(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Multiple architectures need universal (fat) binaries" FORCE) 
   # set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE) 
-  # FIXME: Hack for now to allow testing of Github actions
   set(CMAKE_OSX_ARCHITECTURES "arm64" CACHE STRING "" FORCE)
   # https://developer.apple.com/support/xcode/
   # https://github.com/actions/runner-images?tab=readme-ov-file#available-images
