@@ -44,6 +44,8 @@ jobs:
           - os: ubuntu-latest
             python-version: "3.13"
           - os: windows-latest
+            subsystem: ""
+          - os: windows-latest
             subsystem: mingw
 
     steps:
