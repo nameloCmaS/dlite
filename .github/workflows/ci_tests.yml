@@ -241,59 +241,59 @@ jobs:
  
 
       - name: Build
+        working-directory: build
         run: |
           if [[ "${{ matrix.subsystem }}" != none ]] ;
           then
             source ../venv/bin/activate
           fi
           cmake --build . --config Release
-        working-directory: build
 
 
       - name: Install
+        working-directory: build
         run: |
           if [[ "${{ matrix.subsystem }}" != none ]] ;
           then
             source ../venv/bin/activate
           fi
           cmake --install . --config Release
-        working-directory: build
 
 
       - name: Test
         env:
           DLITE_PYDEBUG: ""
+        working-directory: build
         run: |
           if [[ "${{ matrix.subsystem }}" != none ]] ;
           then
             source ../venv/bin/activate
           fi
           ctest --build-config Release || ctest --build-config Release --rerun-failed --output-on-failure -V
-        working-directory: build
 
 
       - name: Test with all behavior changes disabled
         env:
           DLITE_BEHAVIOR: OFF
+        working-directory: build
         run: |
           if [[ "${{ matrix.subsystem }}" != none ]] ;
           then
             source ../venv/bin/activate
           fi
           ctest --build-config Release || ctest --build-config Release --rerun-failed --output-on-failure -V
-        working-directory: build
 
 
       - name: Test with all behavior changes enabled
         env:
           DLITE_BEHAVIOR: ON
+        working-directory: build
         run: |
           if [[ "${{ matrix.subsystem }}" != none ]] ;
           then
             source ../venv/bin/activate
           fi
           ctest --build-config Release || ctest --build-config Release --rerun-failed --output-on-failure -V
-        working-directory: build
 
 
       - name: Build ${{ matrix.os }} wheel
