@@ -36,13 +36,10 @@ jobs:
         include:
           - os: ubuntu-latest
             python-version: "3.8"
-          - os: ubuntu-latest
-            python-version: "3.13"
-          - os: ubuntu-latest
             subsystem: none
           - os: ubuntu-latest
-            python-version: "3.10"
-            subsystem: mingw
+            python-version: "3.13"
+            subsystem: none
           - os: windows-latest
             python-version: "3.10"
             subsystem: none
