@@ -176,7 +176,7 @@ jobs:
 
             # requirements.txt is omitted as only contains numpy.
             # This needs to be and is installed by pacman.
-            python3 -m pip install -r requirements_full.txt -r examples/mappings/requirements.txt
+            python3 -m pip install -r requirements_full.txt
 
             # Note: Uses MinGW versions of dev tools for building
             # instead: cmake and swig. Thus requirements_dev.txt is not used.
