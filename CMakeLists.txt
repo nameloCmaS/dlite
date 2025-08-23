@@ -237,7 +237,8 @@ endif()
 #
 # Python
 # ======
-if(WITH_PYTHON)
+# WITH_DOC needs to run Sphinx in the same environment to ensure the packages are installed
+if(WITH_PYTHON OR WITH_DOC)
   message(STATUS "Looking for Python3")
   if(CROSS_TARGET AND MINGW)
     set(Python3_FIND_REGISTRY NEVER)
@@ -257,14 +258,14 @@ if(WITH_PYTHON)
 
     if(NOT Python3_FIND_VIRTUALENV)
       message(STATUS "Setting Python3_FIND_VIRTUALENV=ONLY")
-      set(Python3_FIND_VIRTUALENV=ONLY)
+      set(Python3_FIND_VIRTUALENV "ONLY")
     endif()
 
     if(NOT PYTHON_VERSION)
       find_program(
         python_exe
         NAMES python python3
-        PATHS $ENV{VIRTUAL_ENV}/bin
+        PATHS "$ENV{VIRTUAL_ENV}/bin" "$ENV{VIRTUAL_ENV}/Scripts"
         REQUIRED
         NO_DEFAULT_PATH
       )
@@ -286,7 +287,10 @@ if(WITH_PYTHON)
     find_package(Python3 REQUIRED COMPONENTS Interpreter Development NumPy)
   endif()
   unset(CMAKE_CROSSCOMPILING_EMULATOR)
+endif()
 
+# Further configuration not needed if just WITH_DOC
+if(WITH_PYTHON)
   file(TO_CMAKE_PATH "${Python3_SITEARCH}" Python3_SITEARCH)
 
   if(NOT DLITE_PKG_ROOT)
