@@ -214,7 +214,7 @@ extern "C" {
 
 
 /* Wide-character version */
-typedef struct {
+struct _wdirent {
     /* Always zero */
     long d_ino;
 
@@ -232,9 +232,10 @@ typedef struct {
 
     /* File name */
     wchar_t d_name[PATH_MAX+1];
-} _wdirent;
+};
+typedef struct _wdirent _wdirent;
 
-typedef struct {
+struct _WDIR {
     /* Current directory entry */
     struct _wdirent ent;
 
@@ -249,10 +250,11 @@ typedef struct {
 
     /* Initial directory name */
     wchar_t *patt;
-} _WDIR;
+};
+typedef struct _WDIR _WDIR;
 
 /* Multi-byte character version */
-typedef struct {
+struct dirent {
     /* Always zero */
     long d_ino;
 
@@ -270,12 +272,14 @@ typedef struct {
 
     /* File name */
     char d_name[PATH_MAX+1];
-} dirent;
+};
+typedef struct dirent dirent;
 
-typedef struct {
+struct DIR {
     struct dirent ent;
     struct _WDIR *wdirp;
-} DIR;
+};
+typedef struct DIR DIR;
 
 
 /* Dirent functions */
